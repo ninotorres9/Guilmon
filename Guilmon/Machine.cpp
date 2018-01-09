@@ -36,6 +36,26 @@ namespace Guilmon {
 			int lhs = stack_.pop();
 			stack_.push(lhs / rhs);
 		}
+		else if (op == "gtn") {
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push(lhs > rhs ? 1 : 0);
+		}
+		else if (op == "ltn") {
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push(lhs < rhs ? 1 : 0);
+		}
+		else if (op == "eq") {
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push(lhs == rhs ? 1 : 0);
+		}
+		else if (op == "neq") {
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push(lhs != rhs ? 1 : 0);
+		}
 		else if (op == "store") {
 			auto name = instruction.values_[0].value();
 			auto value = stack_.pop();
