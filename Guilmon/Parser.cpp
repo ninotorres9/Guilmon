@@ -19,7 +19,8 @@ namespace Guilmon {
 	}
 	Instruction Parser::expression() {
 		auto firstToken = scanner_.peek().value();
-		if (firstToken == "push" || firstToken == "store" || firstToken == "jmp") {
+		if (firstToken == "push" || firstToken == "store" 
+			|| firstToken == "jmp" || firstToken == "jz") {
 			; // one argument : push
 			auto op = scanner_.get().value();
 			auto arg = scanner_.get();
