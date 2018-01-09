@@ -36,17 +36,20 @@ namespace Guilmon {
 	class Machine {
 	public:
 		Machine(const std::vector<Instruction> &instructions) :
-			instructions_(instructions) {
+			instructions_(instructions) , index_(0){
 			;
 		}
 		inline void run() {
-			for (auto instruction : instructions_)
-				execute(instruction);
+			// 这里不用for each是为了方便jmp等命令跳转
+			while (index_ < instructions_.size()) {
+				execute();
+			}
 		}
 	private:
-		void execute(Instruction& instruction);
+		void execute();
 	private:
 		std::vector<Instruction> instructions_;
+		size_t index_;
 		Stack<int> stack_;
 		std::map<std::string, int> variableTable_;
 	};
