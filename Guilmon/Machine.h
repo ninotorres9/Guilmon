@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+#include "Token.h"
+
 namespace Guilmon {
 	template<typename T>
 	class Stack {
@@ -23,12 +25,12 @@ namespace Guilmon {
 
 	class Instruction {
 	public:
-		Instruction(const std::string& op, const std::vector<int> &values) :
+		Instruction(const std::string& op, const std::vector<Token> &values) :
 			op_(op), values_(values) {
 			;
 		}
 		std::string op_;
-		std::vector<int> values_;
+		std::vector<Token> values_;
 	};
 
 	class Machine {

@@ -1,35 +1,11 @@
 #pragma once
 
 #include "Machine.h"
+#include "Token.h"
 
 #include <string>
 
 namespace Guilmon {
-
-	enum class TokenType
-	{
-		KEYWORD,
-		NUMBER,
-		VARIABLE,
-		END,
-	};
-
-	class Token
-	{
-	public:
-		Token(Token::TokenType type, const std::string &value)
-			:type_(type), value_(value) {
-			;
-		}
-
-	public:
-		inline TokenType type() { return type_; }
-		inline std::string	 value() { return value_; }
-
-	private:
-		TokenType type_;
-		std::string value_;
-	};
 
 	class Scanner
 	{
@@ -91,8 +67,8 @@ namespace Guilmon {
 			return value;
 		}
 		inline Token getVariableToken() {
-			std::string prefixSign(1, getChar());
-			return Token(TokenType::KEYWORD, prefixSign + getIdentifier());
+			getChar();	// eat %
+			return Token(TokenType::VARIABLE, getIdentifier());
 		}
 		inline Token getKeywordToken() {
 			return Token(TokenType::KEYWORD, getIdentifier());

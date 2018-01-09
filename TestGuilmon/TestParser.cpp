@@ -3,7 +3,7 @@
 
 using namespace Guilmon;
 
-TEST(TestParser, Scanner) {
+TEST(TestScanner, Scanner) {
 	Scanner scanner("push 10");
 	EXPECT_FALSE(scanner.isEndOfTokens());
 	EXPECT_EQ(scanner.peek().value(), "push");
@@ -14,10 +14,18 @@ TEST(TestParser, Scanner) {
 	EXPECT_TRUE(scanner.isEndOfTokens());
 }
 
+TEST(TestScanner, Store) {
+	Scanner scanner("%i");
+	auto token = scanner.get();
+	EXPECT_EQ(token.type(), TokenType::VARIABLE);
+	EXPECT_EQ(token.value(), "i");
+}
+
 TEST(TestParser, Push) {
 	Parser parser("push 10");
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "push");
+	EXPECT_EQ(instructions[0].values_[0].type(), TokenType::NUMBER);
 }
 
 TEST(TestParser, Store) {
@@ -28,5 +36,5 @@ TEST(TestParser, Store) {
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "push");
 	EXPECT_EQ(instructions[1].op_, "store");
-	// EXPECT_EQ(instructions[1].values_[0], "")
+	EXPECT_EQ(instructions[1].values_[0].type(), TokenType::VARIABLE);
 }

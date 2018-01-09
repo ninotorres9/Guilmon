@@ -27,6 +27,9 @@
     <ClInclude Include="targetver.h">
       <Filter>资源文件</Filter>
     </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Guilmon.cpp">
