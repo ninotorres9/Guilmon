@@ -21,7 +21,7 @@ namespace Guilmon {
 		auto firstToken = scanner_.peek().value();
 		if (firstToken == "push" || firstToken == "store" 
 			|| firstToken == "jmp" || firstToken == "jz"
-			|| firstToken == "assign") {
+			|| firstToken == "jnz" || firstToken == "assign") {
 			; // one argument : push
 			auto op = scanner_.get().value();
 			auto arg = scanner_.get();

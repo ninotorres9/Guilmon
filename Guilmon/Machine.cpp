@@ -72,6 +72,13 @@ namespace Guilmon {
 				index_ = offset;
 			}
 		}
+		else if (op == "jnz") {
+			auto isNotZero = (stack_.pop() != 0 ? true : false);
+			if (isNotZero) {
+				auto offset = std::stoi(instruction.values_[0].value());
+				index_ = offset;
+			}
+		}
 		else if (op == "assign") {
 			auto name = instruction.values_[0].value();
 			auto value = stack_.pop();
