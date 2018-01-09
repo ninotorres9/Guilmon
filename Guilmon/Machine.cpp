@@ -52,6 +52,11 @@ namespace Guilmon {
 				index_ = offset;
 			}
 		}
+		else if (op == "assign") {
+			auto name = instruction.values_[0].value();
+			auto value = stack_.pop();
+			variableTable_.find(name)->second = value;
+		}
 		else {
 			;
 		}
