@@ -41,10 +41,22 @@ namespace Guilmon {
 			int lhs = stack_.pop();
 			stack_.push(lhs > rhs ? 1 : 0);
 		}
+		else if (op == "goe") {
+			// greater than or equal
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push(lhs >= rhs ? 1 : 0);
+		}
 		else if (op == "ltn") {
 			int rhs = stack_.pop();
 			int lhs = stack_.pop();
 			stack_.push(lhs < rhs ? 1 : 0);
+		}
+		else if (op == "loe") {
+			// less than or equal
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push(lhs <= rhs ? 1 : 0);
 		}
 		else if (op == "eq") {
 			int rhs = stack_.pop();
@@ -55,6 +67,16 @@ namespace Guilmon {
 			int rhs = stack_.pop();
 			int lhs = stack_.pop();
 			stack_.push(lhs != rhs ? 1 : 0);
+		}
+		else if (op == "and") {
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push( (lhs == rhs == 1) ? 1 : 0);
+		}
+		else if (op == "or") {
+			int rhs = stack_.pop();
+			int lhs = stack_.pop();
+			stack_.push((lhs ==1 || rhs == 1) ? 1 : 0);
 		}
 		else if (op == "store") {
 			auto name = instruction.values_[0].value();
