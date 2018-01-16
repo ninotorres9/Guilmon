@@ -31,10 +31,11 @@ protected:
 
 TEST_F(MachineTest, TestAdd) {
 	std::string text = R"(
-		push 2
-		push 1
-		add
-		print
+		tag main
+			push 2
+			push 1
+			add
+			print
 )";
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
@@ -45,6 +46,7 @@ TEST_F(MachineTest, TestAdd) {
 TEST_F(MachineTest, TestMultiExpression) {
 	// 10 + 2 * 5 / 2 - 9 = 6
 	std::string text = R"(
+	tag main
 			push 10
 			push 2
 			push 5
@@ -65,6 +67,7 @@ TEST_F(MachineTest, TestMultiExpression) {
 TEST_F(MachineTest, TestGreaterThan) {
 	// 2 > 1
 	std::string text = R"(
+	tag main
 		push 2
 		push 1
 		gtn
@@ -79,6 +82,7 @@ TEST_F(MachineTest, TestGreaterThan) {
 TEST_F(MachineTest, TestGreaterThanOrEqual) {
 	// 2 > 1
 	std::string text = R"(
+	tag main
 		push 2
 		push 1
 		goe
@@ -93,6 +97,7 @@ TEST_F(MachineTest, TestGreaterThanOrEqual) {
 TEST_F(MachineTest, TestAnd) {
 	// 2 > 3 && 3 < 5
 	std::string text = R"(
+	tag main
 		push 2
 		push 3
 		gtn
@@ -111,6 +116,7 @@ TEST_F(MachineTest, TestAnd) {
 TEST_F(MachineTest, TestOr) {
 	// 3 > 2 || 3 < 1
 	std::string text = R"(
+	tag main
 		push 3
 		push 2
 		gtn
@@ -124,6 +130,31 @@ TEST_F(MachineTest, TestOr) {
 	Machine machine(parser.getInstructions());
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "1");
+}
+
+TEST_F(MachineTest, TestCallFunciton) {
+	/*
+		int add(int lhs, int rhs){
+			return lhs + rhs;
+		}
+		void main(){
+			print add(5, 6);
+		}
+	*/
+	std::string text = R"(
+	tag add
+		add
+		ret
+	tag main
+		push 5
+		push 6
+		call @add
+		print
+	)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "11");
 }
 
 

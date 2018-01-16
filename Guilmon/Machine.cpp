@@ -84,7 +84,15 @@ namespace Guilmon {
 			variableTable_.insert({ name, value });
 		}
 		else if (op == "jmp") {
-			auto offset = std::stoi(instruction.values_[0].value());
+			//auto offset = stack_.pop();
+			//index_ = offset;
+			size_t offset;
+			if (instruction.values_[0].type() == TokenType::FUNCTION) {
+				offset = functionTable_.find(instruction.values_[0].value())->second;
+			}
+			else {
+				offset = std::stoi(instruction.values_[0].value());
+			}
 			index_ = offset;
 		}
 		else if (op == "jz") {
@@ -109,6 +117,17 @@ namespace Guilmon {
 		else if (op == "print") {
 			auto value = stack_.pop();
 			std::cout << value << std::endl;
+		}
+		else if (op == "call") {
+			// 存入当前地址并跳转
+			addressStack_.push(index_);
+			size_t offset = functionTable_.find(instruction.values_[0].value())->second;
+			index_ = offset;
+		}
+		else if (op == "ret") {
+			// 跳回调用地址
+			size_t offset = addressStack_.pop();
+			index_ = offset;
 		}
 		else {
 			;

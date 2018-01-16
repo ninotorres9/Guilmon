@@ -41,10 +41,30 @@ namespace Guilmon {
 			;
 		}
 		inline void run() {
-			// 这里不用for each是为了方便jmp等命令跳转
-			while (index_ < instructions_.size()) {
-				execute();
+
+			// 第一趟扫描
+			size_t index = 0;
+			for (auto inst : instructions_) {
+				if (inst.op_ == "tag")
+					functionTable_.insert({ inst.values_[0].value(), index});
+				index++;
 			}
+
+			// 从main处启动
+			auto main = functionTable_.find("main");
+			if (main != functionTable_.end()) {
+				index_ = main->second;
+
+				// 这里不用for each是为了方便jmp等命令跳转
+				while (index_ < instructions_.size()) {
+					execute();
+				}
+			}
+			else {
+				// 报错，没有main
+			}
+
+
 		}
 	private:
 		void execute();
@@ -52,7 +72,9 @@ namespace Guilmon {
 		std::vector<Instruction> instructions_;
 		size_t index_;
 		Stack<int> stack_;
+		Stack<size_t> addressStack_;
 		std::map<std::string, int> variableTable_;
+		std::map<std::string, size_t> functionTable_;
 	};
 
 }
