@@ -5,23 +5,32 @@
 namespace Guilmon {
 	Token Scanner::getToken()
 	{
+		Token token(TokenType::END, "end");
+
 		skipSpace();
 		auto firstChar = peekChar();
 		if (isdigit(firstChar)) {
-			return getNumberToken();
+			token =  getNumberToken();
 		}
 		else if (firstChar == '%') {
-			return getVariableToken();
+			token = getVariableToken();
+		}
+		else if (firstChar == '@') {
+			getChar();	// eat @
+			token = Token(TokenType::FUNCTION, { getIdentifier() });
 		}
 		else {
-			return getKeywordToken();
+			token = getKeywordToken();
 		}
+		skipSpace();
+		return token;
 	}
 	Instruction Parser::expression() {
 		auto firstToken = scanner_.peek().value();
 		if (firstToken == "push" || firstToken == "store" 
 			|| firstToken == "jmp" || firstToken == "jz"
-			|| firstToken == "jnz" || firstToken == "assign") {
+			|| firstToken == "jnz" || firstToken == "assign"
+			|| firstToken == "tag"){
 			; // one argument : push
 			auto op = scanner_.get().value();
 			auto arg = scanner_.get();

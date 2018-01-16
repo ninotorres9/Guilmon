@@ -41,7 +41,7 @@ namespace Guilmon {
 		}
 		inline void skipSpace() {
 			// Ìø¹ýÈßÓà×Ö·û
-			while (peekChar() == ' ' || peekChar() == '\t' || peekChar() == '\n' || peekChar() == '\t\n')
+			while(isspace(peekChar()))
 				getChar();
 		}
 		inline bool isEndOfExp() {
