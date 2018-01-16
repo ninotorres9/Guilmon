@@ -36,6 +36,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Guilmon\Machine.cpp" />
     <ClCompile Include="..\Guilmon\Parser.cpp" />
     <ClCompile Include="TestMachine.cpp" />
     <ClCompile Include="TestParser.cpp" />

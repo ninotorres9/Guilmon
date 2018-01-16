@@ -84,6 +84,10 @@ namespace Guilmon {
 			auto value = stack_.pop();
 			variableTable_.find(name)->second = value;
 		}
+		else if (op == "print") {
+			auto value = stack_.pop();
+			std::cout << value << std::endl;
+		}
 		else {
 			;
 		}

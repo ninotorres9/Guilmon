@@ -105,4 +105,6 @@ namespace Guilmon {
 	private:
 		Scanner scanner_;
 	};
+
+
 }
