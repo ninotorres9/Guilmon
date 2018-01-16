@@ -132,6 +132,37 @@ TEST_F(MachineTest, TestOr) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "1");
 }
 
+TEST_F(MachineTest, TestIf) {
+	/*
+		int cond = 1;
+		if(cond > 0)
+			print 5;
+		else
+			print 7;
+	*/
+	std::string text = R"(
+	tag @main
+		push 1
+		store %cond
+		push %cond
+		push 0
+		gtn
+		jz @ELSE
+	tag @IF
+		push 5
+		print
+		jmp @ENDIF
+	tag @ELSE
+		push 7
+		print
+	tag @ENDIF
+	)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "5");
+}
+
 TEST_F(MachineTest, TestCallFunciton) {
 	/*
 		int add(int lhs, int rhs){
@@ -142,10 +173,10 @@ TEST_F(MachineTest, TestCallFunciton) {
 		}
 	*/
 	std::string text = R"(
-	tag add
+	tag @add
 		add
 		ret
-	tag main
+	tag @main
 		push 5
 		push 6
 		call @add

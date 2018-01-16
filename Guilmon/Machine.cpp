@@ -84,8 +84,6 @@ namespace Guilmon {
 			variableTable_.insert({ name, value });
 		}
 		else if (op == "jmp") {
-			//auto offset = stack_.pop();
-			//index_ = offset;
 			size_t offset;
 			if (instruction.values_[0].type() == TokenType::FUNCTION) {
 				offset = functionTable_.find(instruction.values_[0].value())->second;
@@ -98,7 +96,13 @@ namespace Guilmon {
 		else if (op == "jz") {
 			auto isZero = (stack_.pop() == 0 ? true : false);
 			if (isZero) {
-				auto offset = std::stoi(instruction.values_[0].value());
+				size_t offset;
+				if (instruction.values_[0].type() == TokenType::FUNCTION) {
+					offset = functionTable_.find(instruction.values_[0].value())->second;
+				}
+				else {
+					offset = std::stoi(instruction.values_[0].value());
+				}
 				index_ = offset;
 			}
 		}
