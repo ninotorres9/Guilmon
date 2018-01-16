@@ -3,6 +3,17 @@
 
 #include <sstream>
 #include <memory>
+#include <cctype>
+
+
+std::string removeSpaces(std::string text) {
+	// É¾³ý×Ö·ûÖÐµÄ¿Õ°×·û
+	text.erase(std::remove_if(text.begin(), text.end(),
+		[](unsigned char x) {return std::isspace(x); }),
+		text.end());
+	return text;
+}
+
 
 using namespace Guilmon;
 class MachineTest : public ::testing::Test {
@@ -29,8 +40,5 @@ TEST_F(MachineTest, Machine) {
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
 	machine.run();
-
-	std::string result;
-	stream_ >> result;
-	EXPECT_EQ(result, "3");
+	EXPECT_EQ(removeSpaces(stream_.str()), "3");
 }
