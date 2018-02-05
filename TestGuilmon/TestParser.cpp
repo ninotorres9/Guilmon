@@ -58,5 +58,5 @@ TEST(ParserTest, Tag) {
 )");
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "tag");
-	EXPECT_EQ(instructions[0].values_[0].type(), TokenType::FUNCTION);
+	EXPECT_EQ(instructions[0].values_[0].type(), TokenType::TAG);
 }

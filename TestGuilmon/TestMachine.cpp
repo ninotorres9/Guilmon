@@ -132,6 +132,29 @@ TEST_F(MachineTest, TestOr) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "1");
 }
 
+TEST_F(MachineTest, TestAssign) {
+	/*
+		int number = 5;
+		number = number + 10;
+		-> 15
+	*/
+	std::string text = R"(
+	tag @main
+		push 5
+		store %number
+		push %number
+		push 10
+		add
+		assign %number
+		push %number
+		print 
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "15");
+}
+
 TEST_F(MachineTest, TestIf) {
 	/*
 		int cond = 1;
@@ -163,6 +186,12 @@ TEST_F(MachineTest, TestIf) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "5");
 }
 
+TEST_F(MachineTest, TestScope) {
+	/*
+		
+	*/
+}
+
 TEST_F(MachineTest, TestCallFunciton) {
 	/*
 		int add(int lhs, int rhs){
@@ -188,6 +217,83 @@ TEST_F(MachineTest, TestCallFunciton) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "11");
 }
 
+TEST_F(MachineTest, TestWhile) {
+	/*
+	void main(){
+		int condition = 10;
+		while(condition > 5){
+			condition = condition - 1;
+		}
+		print condition;
+	}
+	-> 5
+
+
+	*/
+	std::string text = R"(
+	tag @main
+		push 10
+		store %condition
+	tag @WHILE
+		push %condition
+		push 5
+		gtn
+		jz @ENDWHILE
+		push %condition
+		push 1
+		sub
+		assign %condition
+		jmp @WHILE
+	tag @ENDWHILE	
+	push %condition
+	print
+	)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "5");
+}
+
+TEST_F(MachineTest, TestFor) {
+	/*
+		int result = 0;
+		for(int i = 0; i != 10; i = i + 1){
+			result = result + 1;
+		}
+		print result;
+		
+		-> 10
+	*/
+	std::string text = R"(
+	tag @main
+		push 0
+		store %result
+	tag @FOR
+		push 0
+		store %i
+	tag @LOOP
+		push %i
+		push 10
+		neq
+		jz @ENDFOR
+		push %result
+		push 1
+		add
+		assign %result
+		push %i
+		push 1
+		add
+		assign %i
+		jmp @LOOP
+	tag @ENDFOR
+		push %result
+		print %result
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "10");
+}
 
 
 

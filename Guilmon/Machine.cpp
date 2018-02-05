@@ -83,21 +83,30 @@ namespace Guilmon {
 			auto valuePtr = createInt(stack_.pop());
 			intVarTable_.insert({ name, valuePtr });
 		}
+		else if (op == "assign") {
+			auto name = instruction.values_[0].value();
+			auto valuePtr = createInt(stack_.pop());
+			intVarTable_.find(name)->second = valuePtr;
+		}
 		else if (op == "jmp") {
+			// 直接跳转
 			size_t offset;
-			if (instruction.values_[0].type() == TokenType::FUNCTION) {
+			// 向tag跳转
+			if (instruction.values_[0].type() == TokenType::TAG) {
 				offset = functionTable_.find(instruction.values_[0].value())->second;
 			}
+			// 跳转至固定位置
 			else {
 				offset = std::stoi(instruction.values_[0].value());
 			}
 			index_ = offset;
 		}
 		else if (op == "jz") {
+			// stack顶端值为0时跳转
 			auto isZero = (stack_.pop() == 0 ? true : false);
 			if (isZero) {
 				size_t offset;
-				if (instruction.values_[0].type() == TokenType::FUNCTION) {
+				if (instruction.values_[0].type() == TokenType::TAG) {
 					offset = functionTable_.find(instruction.values_[0].value())->second;
 				}
 				else {
@@ -107,16 +116,12 @@ namespace Guilmon {
 			}
 		}
 		else if (op == "jnz") {
+			// stack顶端值为 非0 时跳转
 			auto isNotZero = (stack_.pop() != 0 ? true : false);
 			if (isNotZero) {
 				auto offset = std::stoi(instruction.values_[0].value());
 				index_ = offset;
 			}
-		}
-		else if (op == "assign") {
-			auto name = instruction.values_[0].value();
-			auto valuePtr = createInt(stack_.pop());
-			intVarTable_.find(name)->second = valuePtr;
 		}
 		else if (op == "print") {
 			auto value = stack_.pop();

@@ -8,7 +8,7 @@ namespace Guilmon {
 		KEYWORD,
 		NUMBER,
 		VARIABLE,
-		FUNCTION,
+		TAG,
 		END,
 	};
 

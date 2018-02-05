@@ -17,7 +17,7 @@ namespace Guilmon {
 		}
 		else if (firstChar == '@') {
 			getChar();	// eat @
-			token = Token(TokenType::FUNCTION, { getIdentifier() });
+			token = Token(TokenType::TAG, { getIdentifier() });
 		}
 		else {
 			token = getKeywordToken();
