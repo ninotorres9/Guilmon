@@ -8,8 +8,8 @@ namespace Guilmon {
 		if (op == "push") {
 			// value两种情况: 1. 变量调用 2.字面值
 			if (instruction.values_[0].type() == TokenType::VARIABLE) {
-				auto value = variableTable_.find(instruction.values_[0].value())->second;
-				stack_.push(value);
+				auto valuePtr = intVarTable_.find(instruction.values_[0].value())->second;
+				stack_.push(*valuePtr);
 			}
 			else {
 				auto value = std::stoi(instruction.values_[0].value());
@@ -80,8 +80,8 @@ namespace Guilmon {
 		}
 		else if (op == "store") {
 			auto name = instruction.values_[0].value();
-			auto value = stack_.pop();
-			variableTable_.insert({ name, value });
+			auto valuePtr = createInt(stack_.pop());
+			intVarTable_.insert({ name, valuePtr });
 		}
 		else if (op == "jmp") {
 			size_t offset;
@@ -115,8 +115,8 @@ namespace Guilmon {
 		}
 		else if (op == "assign") {
 			auto name = instruction.values_[0].value();
-			auto value = stack_.pop();
-			variableTable_.find(name)->second = value;
+			auto valuePtr = createInt(stack_.pop());
+			intVarTable_.find(name)->second = valuePtr;
 		}
 		else if (op == "print") {
 			auto value = stack_.pop();

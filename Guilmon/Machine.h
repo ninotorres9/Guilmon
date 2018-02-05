@@ -68,12 +68,18 @@ namespace Guilmon {
 		}
 	private:
 		void execute();
+		inline int* createInt(int value) {
+			auto ptr = intAlloc_.allocate(1);
+			intAlloc_.construct(ptr, value);
+			return ptr;
+		}
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;
 		Stack<int> stack_;
 		Stack<size_t> addressStack_;
-		std::map<std::string, int> variableTable_;
+		std::map<std::string, int*> intVarTable_;
+		std::allocator<int> intAlloc_;
 		std::map<std::string, size_t> functionTable_;
 	};
 
