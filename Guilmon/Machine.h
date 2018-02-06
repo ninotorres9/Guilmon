@@ -34,6 +34,11 @@ namespace Guilmon {
 		std::vector<Token> operands_;
 	};
 
+	union Value {
+		int number;
+		char word;
+		~Value() { ; }
+	};
 
 	class Machine {
 	public:
@@ -81,7 +86,10 @@ namespace Guilmon {
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;
-		Stack<int> stack_;
+
+		// Stack<int> stack_;
+		Stack<Value> stack_;	// ‘ÀÀ„’ª
+
 		Stack<size_t> addressStack_;
 		std::map<std::string, int*> intVarTable_;
 		std::allocator<int> intAlloc_;

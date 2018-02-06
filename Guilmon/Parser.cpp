@@ -19,6 +19,11 @@ namespace Guilmon {
 			getChar();	// eat @
 			token = Token(TokenType::TAG, { getIdentifier() });
 		}
+		else if (firstChar == '\'') {
+			getChar();	// eat '
+			token = Token(TokenType::CHAR, { std::string(1, getChar()) });
+			getChar();	// eat '
+		}
 		else {
 			token = getKeywordToken();
 		}

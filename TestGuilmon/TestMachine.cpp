@@ -155,6 +155,24 @@ TEST_F(MachineTest, TestAssign) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "15");
 }
 
+TEST_F(MachineTest, TestChar) {
+	/*
+	char ch = 'a'
+	print 'a'
+	-> 15
+	*/
+	std::string text = R"(
+	tag @main
+		push 'd'
+
+		print_s 
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "d");
+}
+
 TEST_F(MachineTest, TestIf) {
 	/*
 		int cond = 1;

@@ -7,6 +7,7 @@ namespace Guilmon {
 	{
 		KEYWORD,
 		NUMBER,
+		CHAR,
 		VARIABLE,
 		TAG,
 		END,
