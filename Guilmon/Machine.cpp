@@ -84,7 +84,7 @@ namespace Guilmon {
 			operationStack_.push(Value{ (lhs == 1 || rhs == 1) ? 1 : 0 });
 		}
 		else if (op == "store") {
-			auto name = instruction.operands_[0].value();
+			auto name = instruction.operands_[0].value();	// ±äÁ¿Ãû
 			auto valuePtr = createValue(operationStack_.pop().number);
 			variableTable_.insert({ name, valuePtr });
 		}

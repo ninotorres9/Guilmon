@@ -164,7 +164,8 @@ TEST_F(MachineTest, TestChar) {
 	std::string text = R"(
 	tag @main
 		push 'd'
-
+		store %ch
+		push %ch
 		print_s 
 )";
 	Parser parser(text);
