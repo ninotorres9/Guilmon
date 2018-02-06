@@ -73,6 +73,10 @@ namespace Guilmon {
 			intAlloc_.construct(ptr, value);
 			return ptr;
 		}
+		inline int* getVariable(const std::string& name)
+		{
+			return intVarTable_.find(name)->second;
+		}
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;

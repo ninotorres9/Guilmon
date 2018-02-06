@@ -8,7 +8,7 @@ namespace Guilmon {
 		if (op == "push") {
 			// value两种情况: 1. 变量调用 2.字面值
 			if (instruction.values_[0].type() == TokenType::VARIABLE) {
-				auto valuePtr = intVarTable_.find(instruction.values_[0].value())->second;
+				auto valuePtr = getVariable(instruction.values_[0].value());
 				stack_.push(*valuePtr);
 			}
 			else {
