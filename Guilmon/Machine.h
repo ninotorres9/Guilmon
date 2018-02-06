@@ -74,25 +74,23 @@ namespace Guilmon {
 		}
 	private:
 		void execute();
-		inline int* createInt(int value) {
-			auto ptr = intAlloc_.allocate(1);
-			intAlloc_.construct(ptr, value);
+		template<typename T>
+		inline Value* createValue(T value) {
+			auto ptr = alloc_.allocate(sizeof(Value));
+			alloc_.construct(ptr, Value{ value });
 			return ptr;
 		}
-		inline int* getVariable(const std::string& name)
-		{
-			return intVarTable_.find(name)->second;
+		inline Value* getValue(const std::string& name) {
+			return variableTable_.find(name)->second;
 		}
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;
+		Stack<Value> operationStack_;	// ‘ÀÀ„’ª
+		Stack<size_t> addressStack_;	// µÿ÷∑’ª
 
-		// Stack<int> stack_;
-		Stack<Value> stack_;	// ‘ÀÀ„’ª
-
-		Stack<size_t> addressStack_;
-		std::map<std::string, int*> intVarTable_;
-		std::allocator<int> intAlloc_;
+		std::allocator<Value> alloc_;		// ƒ⁄¥Ê≥ÿ
+		std::map<std::string, Value*> variableTable_;
 		std::map<std::string, size_t> functionTable_;
 	};
 
