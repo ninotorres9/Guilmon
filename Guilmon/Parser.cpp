@@ -10,7 +10,7 @@ namespace Guilmon {
 		skipSpace();
 		auto firstChar = peekChar();
 		if (isdigit(firstChar)) {
-			token =  getNumberToken();
+			token = getNumberToken();
 		}
 		else if (firstChar == '%') {
 			token = getVariableToken();
@@ -32,10 +32,12 @@ namespace Guilmon {
 	}
 	Instruction Parser::expression() {
 		auto firstToken = scanner_.peek().value();
-		if (firstToken == "push" || firstToken == "store" 
-			|| firstToken == "jmp"|| firstToken == "jz"   
+		if (firstToken == "push" || firstToken == "store"
+			|| firstToken == "jmp" || firstToken == "jz"
 			|| firstToken == "jnz" || firstToken == "assign"
-			|| firstToken == "tag" || firstToken == "call"){
+			|| firstToken == "tag" || firstToken == "call"
+			|| firstToken == "new_array" || firstToken == "store_a"
+			|| firstToken == "push_a") {
 			; // one argument : push
 			auto op = scanner_.get().value();
 			auto arg = scanner_.get();

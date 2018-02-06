@@ -314,5 +314,30 @@ TEST_F(MachineTest, TestFor) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "10");
 }
 
+TEST_F(MachineTest, TestArray) {
+	/*
+		int array[3] = {19, 29, 13};
+		print array[2]
+
+		-> 3
+	*/
+	std::string text = R"(
+	tag @main
+		push 3
+		new_array %array
+		push 19
+		push 0
+		store_a %array
+		push 0
+		push_a %array 
+		print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "19");
+}
+
+
 
 

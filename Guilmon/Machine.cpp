@@ -21,6 +21,12 @@ namespace Guilmon {
 				operationStack_.push(Value{ value });
 			}
 		}
+		else if (op == "push_a") {
+			auto name = instruction.operands_[0].value();	// 变量名
+			auto arrayPtr = variableTable_.find(name)->second;
+			auto offset = operationStack_.pop().number;
+			operationStack_.push(*(arrayPtr + offset));
+		}
 		else if (op == "add") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
@@ -86,6 +92,19 @@ namespace Guilmon {
 		else if (op == "store") {
 			auto name = instruction.operands_[0].value();	// 变量名
 			auto valuePtr = createValue(operationStack_.pop().number);
+			variableTable_.insert({ name, valuePtr });
+		}
+		else if (op == "store_a") {
+			auto name = instruction.operands_[0].value();	// 变量名
+			auto arrayPtr = variableTable_.find(name)->second;
+			auto offset = operationStack_.pop().number;
+			auto value = operationStack_.pop();
+			alloc_.construct(arrayPtr + offset, value);
+		}
+		else if (op == "new_array") {
+			auto name = instruction.operands_[0].value();	// 变量名
+			auto size = operationStack_.pop().number;
+			auto valuePtr = createArray(size);
 			variableTable_.insert({ name, valuePtr });
 		}
 		else if (op == "assign") {
