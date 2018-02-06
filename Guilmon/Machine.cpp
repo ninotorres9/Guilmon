@@ -7,12 +7,12 @@ namespace Guilmon {
 		auto op = instruction.op_;
 		if (op == "push") {
 			// value两种情况: 1. 变量调用 2.字面值
-			if (instruction.values_[0].type() == TokenType::VARIABLE) {
-				auto valuePtr = getVariable(instruction.values_[0].value());
+			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
+				auto valuePtr = getVariable(instruction.operands_[0].value());
 				stack_.push(*valuePtr);
 			}
 			else {
-				auto value = std::stoi(instruction.values_[0].value());
+				auto value = std::stoi(instruction.operands_[0].value());
 				stack_.push(value);
 			}
 		}
@@ -79,12 +79,12 @@ namespace Guilmon {
 			stack_.push((lhs ==1 || rhs == 1) ? 1 : 0);
 		}
 		else if (op == "store") {
-			auto name = instruction.values_[0].value();
+			auto name = instruction.operands_[0].value();
 			auto valuePtr = createInt(stack_.pop());
 			intVarTable_.insert({ name, valuePtr });
 		}
 		else if (op == "assign") {
-			auto name = instruction.values_[0].value();
+			auto name = instruction.operands_[0].value();
 			auto valuePtr = createInt(stack_.pop());
 			intVarTable_.find(name)->second = valuePtr;
 		}
@@ -92,12 +92,12 @@ namespace Guilmon {
 			// 直接跳转
 			size_t offset;
 			// 向tag跳转
-			if (instruction.values_[0].type() == TokenType::TAG) {
-				offset = functionTable_.find(instruction.values_[0].value())->second;
+			if (instruction.operands_[0].type() == TokenType::TAG) {
+				offset = functionTable_.find(instruction.operands_[0].value())->second;
 			}
 			// 跳转至固定位置
 			else {
-				offset = std::stoi(instruction.values_[0].value());
+				offset = std::stoi(instruction.operands_[0].value());
 			}
 			index_ = offset;
 		}
@@ -106,11 +106,11 @@ namespace Guilmon {
 			auto isZero = (stack_.pop() == 0 ? true : false);
 			if (isZero) {
 				size_t offset;
-				if (instruction.values_[0].type() == TokenType::TAG) {
-					offset = functionTable_.find(instruction.values_[0].value())->second;
+				if (instruction.operands_[0].type() == TokenType::TAG) {
+					offset = functionTable_.find(instruction.operands_[0].value())->second;
 				}
 				else {
-					offset = std::stoi(instruction.values_[0].value());
+					offset = std::stoi(instruction.operands_[0].value());
 				}
 				index_ = offset;
 			}
@@ -119,7 +119,7 @@ namespace Guilmon {
 			// stack顶端值为 非0 时跳转
 			auto isNotZero = (stack_.pop() != 0 ? true : false);
 			if (isNotZero) {
-				auto offset = std::stoi(instruction.values_[0].value());
+				auto offset = std::stoi(instruction.operands_[0].value());
 				index_ = offset;
 			}
 		}
@@ -130,7 +130,7 @@ namespace Guilmon {
 		else if (op == "call") {
 			// 存入当前地址并跳转
 			addressStack_.push(index_);
-			size_t offset = functionTable_.find(instruction.values_[0].value())->second;
+			size_t offset = functionTable_.find(instruction.operands_[0].value())->second;
 			index_ = offset;
 		}
 		else if (op == "ret") {

@@ -27,12 +27,13 @@ namespace Guilmon {
 	class Instruction {
 	public:
 		Instruction(const std::string& op, const std::vector<Token> &values) :
-			op_(op), values_(values) {
+			op_(op), operands_(values) {
 			;
 		}
 		std::string op_;
-		std::vector<Token> values_;
+		std::vector<Token> operands_;
 	};
+
 
 	class Machine {
 	public:
@@ -46,7 +47,7 @@ namespace Guilmon {
 			size_t index = 0;
 			for (auto inst : instructions_) {
 				if (inst.op_ == "tag")
-					functionTable_.insert({ inst.values_[0].value(), index});
+					functionTable_.insert({ inst.operands_[0].value(), index});
 				index++;
 			}
 

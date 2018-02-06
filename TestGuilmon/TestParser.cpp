@@ -37,7 +37,7 @@ TEST(ParserTest, Push) {
 	Parser parser("push 10");
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "push");
-	EXPECT_EQ(instructions[0].values_[0].type(), TokenType::NUMBER);
+	EXPECT_EQ(instructions[0].operands_[0].type(), TokenType::NUMBER);
 }
 
 TEST(ParserTest, Store) {
@@ -48,7 +48,7 @@ TEST(ParserTest, Store) {
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "push");
 	EXPECT_EQ(instructions[1].op_, "store");
-	EXPECT_EQ(instructions[1].values_[0].type(), TokenType::VARIABLE);
+	EXPECT_EQ(instructions[1].operands_[0].type(), TokenType::VARIABLE);
 }
 
 TEST(ParserTest, Tag) {
@@ -58,5 +58,5 @@ TEST(ParserTest, Tag) {
 )");
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "tag");
-	EXPECT_EQ(instructions[0].values_[0].type(), TokenType::TAG);
+	EXPECT_EQ(instructions[0].operands_[0].type(), TokenType::TAG);
 }
