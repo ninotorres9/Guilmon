@@ -6,7 +6,7 @@ namespace Guilmon {
 		auto instruction = instructions_[index_++];
 		auto op = instruction.op_;
 		if (op == "push") {
-			// value几种情况: 1. 变量调用 2.char 3.数字
+			// value几种情况: 1. 变量 2.char 3.数字
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
 				auto valuePtr = getValue(instruction.operands_[0].value());
 				operationStack_.push(Value{ *valuePtr });
@@ -22,6 +22,7 @@ namespace Guilmon {
 			}
 		}
 		else if (op == "push_a") {
+			// 压入数组元素
 			auto name = instruction.operands_[0].value();	// 变量名
 			auto arrayPtr = variableTable_.find(name)->second;
 			auto offset = operationStack_.pop().number;
