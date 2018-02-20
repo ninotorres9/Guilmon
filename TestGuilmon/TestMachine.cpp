@@ -317,7 +317,7 @@ TEST_F(MachineTest, TestFor) {
 TEST_F(MachineTest, TestArray) {
 	/*
 		int array[3] = {19, 29, 13};
-		print array[2]
+		print array[0]
 
 		-> 3
 	*/
