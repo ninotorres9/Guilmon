@@ -29,6 +29,17 @@ protected:
 	}
 };
 
+TEST_F(MachineTest, TestNoTab) {
+	std::string text = R"(tag main
+push 123
+print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "123");
+}
+
 TEST_F(MachineTest, TestAdd) {
 	std::string text = R"(
 		tag main

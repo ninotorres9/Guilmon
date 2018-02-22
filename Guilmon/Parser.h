@@ -16,6 +16,11 @@ namespace Guilmon {
 		}
 
 	public:
+		inline void print() const {
+			for (auto token : tokens_) {
+				std::cout <<  token.toString();
+			}
+		}
 		inline Token get() {
 			return isEndOfTokens() ? Token(TokenType::END, "end") : *(iter_++);
 		}
@@ -92,6 +97,9 @@ namespace Guilmon {
 		Parser(const std::string& text) :
 			scanner_(text) {
 			;
+		}
+		inline void printTokens() const {
+			scanner_.print();
 		}
 		inline std::vector<Instruction> getInstructions() {
 			std::vector<Instruction> instructions;

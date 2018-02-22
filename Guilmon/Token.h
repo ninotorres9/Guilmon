@@ -22,8 +22,12 @@ namespace Guilmon {
 		}
 
 	public:
-		inline TokenType type() { return type_; }
-		inline std::string	 value() { return value_; }
+		inline TokenType type() const { return type_; }
+		inline std::string	 value() const { return value_; }
+		inline std::string toString() const{
+			return std::string("") +
+				"{ " + value_ + " }";
+		}
 
 	private:
 		TokenType type_;
