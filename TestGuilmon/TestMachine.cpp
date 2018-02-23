@@ -40,6 +40,26 @@ print
 	EXPECT_EQ(removeSpaces(stream_.str()), "123");
 }
 
+
+
+TEST_F(MachineTest, TestMult) {
+	std::string text = R"(
+		tag main
+			push 1
+			push 5
+			add
+			push 6
+			add
+			push 7
+			add
+			print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "19");
+}
+
 TEST_F(MachineTest, TestAdd) {
 	std::string text = R"(
 		tag main
@@ -53,6 +73,21 @@ TEST_F(MachineTest, TestAdd) {
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "3");
 }
+
+TEST_F(MachineTest, TestDiv) {
+	std::string text = R"(
+		tag main
+			push 10
+			push 2
+			div
+			print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "5");
+}
+
 
 TEST_F(MachineTest, TestMultiExpression) {
 	// 10 + 2 * 5 / 2 - 9 = 6
