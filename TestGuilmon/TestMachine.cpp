@@ -264,7 +264,6 @@ TEST_F(MachineTest, TestMultIf) {
 		}else{
 			result += 7;
 		}
-
 		print result;
 }
 	*/
