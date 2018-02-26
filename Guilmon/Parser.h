@@ -80,7 +80,7 @@ namespace Guilmon {
 		}
 		inline std::string getIdentifier() {
 			std::string value;
-			while (isalpha(peekChar()) || peekChar() == '_')
+			while (isalpha(peekChar()) || peekChar() == '_' || isdigit(peekChar()))
 				value.push_back(getChar());
 			return value;
 		}

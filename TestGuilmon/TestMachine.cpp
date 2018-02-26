@@ -40,8 +40,6 @@ print
 	EXPECT_EQ(removeSpaces(stream_.str()), "123");
 }
 
-
-
 TEST_F(MachineTest, TestMult) {
 	std::string text = R"(
 		tag main
@@ -87,7 +85,6 @@ TEST_F(MachineTest, TestDiv) {
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "5");
 }
-
 
 TEST_F(MachineTest, TestMultiExpression) {
 	// 10 + 2 * 5 / 2 - 9 = 6
@@ -251,6 +248,67 @@ TEST_F(MachineTest, TestIf) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "5");
 }
 
+TEST_F(MachineTest, TestMultIf) {
+	/*
+		int main(){
+		int result = 20;
+
+		if(1){
+			result += 5;
+		}else{
+			result += 21;
+		}
+
+		if(0){
+			result += 19;
+		}else{
+			result += 7;
+		}
+
+		print result;
+}
+	*/
+	std::string text = R"(
+		tag @main 
+			push 20 
+			store %result 
+			push 1 
+			jz @ELSE0 
+		tag @IF0 
+			push %result 
+			push 5 
+			add 
+			assign %result 
+			jmp @ENDIF0 
+		tag @ELSE0 
+			push %result 
+			push 21 
+			add 
+			assign %result 
+		tag @ENDIF0 
+			push 0 
+			jz @ELSE1 
+		tag @IF1 
+			push %result 
+			push 19 
+			add 
+			assign %result 
+			jmp @ENDIF1 
+		tag @ELSE1 
+			push %result 
+			push 7 
+			add 
+			assign %result 
+		tag @ENDIF1 
+			push %result 
+			print 
+	)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "32");
+}
+
 TEST_F(MachineTest, TestScope) {
 	/*
 		
@@ -293,7 +351,7 @@ TEST_F(MachineTest, TestWhile) {
 	}
 	-> 5
 
-
+	
 	*/
 	std::string text = R"(
 	tag @main

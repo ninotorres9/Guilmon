@@ -53,10 +53,11 @@ TEST(ParserTest, Store) {
 
 TEST(ParserTest, Tag) {
 	Parser parser(R"(
-		tag @function
+		tag @function0
 		tag @main
 )");
 	auto instructions = parser.getInstructions();
 	EXPECT_EQ(instructions[0].op_, "tag");
 	EXPECT_EQ(instructions[0].operands_[0].type(), TokenType::TAG);
+	EXPECT_EQ(instructions[0].operands_[0].value(), "function0");
 }
