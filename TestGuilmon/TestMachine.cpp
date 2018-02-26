@@ -302,6 +302,7 @@ TEST_F(MachineTest, TestMultIf) {
 		tag @ENDIF1 
 			push %result 
 			print 
+
 	)";
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
