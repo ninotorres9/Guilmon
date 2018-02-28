@@ -470,7 +470,7 @@ TEST_F(MachineTest, TestNestedFor) {
 			assign %i 
 			jmp @LOOP0 
 		tag @ENDFOR0 
-
+			free %i
 			push %result 
 			print 
 )";
