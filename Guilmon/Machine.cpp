@@ -95,6 +95,14 @@ namespace Guilmon {
 			auto valuePtr = createValue(operationStack_.pop().number);
 			variableTable_.insert({ name, valuePtr });
 		}
+		else if (op == "free") {
+			auto variableName = instruction.operands_[0].value();	
+			auto variablePtr = variableTable_.find(variableName);	
+			// free
+			alloc_.deallocate(variablePtr->second, sizeof(Value));	 
+			// removed from variable table
+			variableTable_.erase(variablePtr);	
+		}
 		else if (op == "store_a") {
 			auto name = instruction.operands_[0].value();	// ±äÁ¿Ãû
 			auto arrayPtr = variableTable_.find(name)->second;

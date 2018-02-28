@@ -74,13 +74,10 @@ namespace Guilmon {
 		}
 	private:
 		void execute();
-		
-
 		inline Value* createArray(unsigned int size) {
 			auto ptr = alloc_.allocate(sizeof(Value) * size);
 			return ptr;
 		}
-
 		template<typename T>
 		inline Value* createValue(T value) {
 			auto ptr = alloc_.allocate(sizeof(Value));
