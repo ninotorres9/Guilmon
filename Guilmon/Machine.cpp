@@ -8,7 +8,7 @@ namespace Guilmon {
 		if (op == "push") {
 			// value几种情况: 1. 变量 2.char 3.数字
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
-				auto valuePtr = getValue(instruction.operands_[0].value());
+				auto valuePtr = findVariable(instruction.operands_[0].value());
 				operationStack_.push(Value{ *valuePtr });
 			}
 			else if (instruction.operands_[0].type() == TokenType::CHAR) {
@@ -105,7 +105,7 @@ namespace Guilmon {
 		}
 		else if (op == "store_a") {
 			auto name = instruction.operands_[0].value();	// 变量名
-			auto arrayPtr = variableTable_.find(name)->second;
+			auto arrayPtr = findVariable(name);
 			auto offset = operationStack_.pop().number;
 			auto value = operationStack_.pop();
 			alloc_.construct(arrayPtr + offset, value);
@@ -113,13 +113,13 @@ namespace Guilmon {
 		else if (op == "new_array") {
 			auto name = instruction.operands_[0].value();	// 变量名
 			auto size = operationStack_.pop().number;
-			auto valuePtr = createArray(size);
-			variableTable_.insert({ name, valuePtr });
+			auto value = createArray(size);
+			createVariable(name, value);
 		}
 		else if (op == "assign") {
 			auto name = instruction.operands_[0].value();
-			auto valuePtr = createValue(operationStack_.pop().number);
-			variableTable_.find(name)->second = valuePtr;
+			auto value = createValue(operationStack_.pop().number);
+			setVariable(name, value);
 		}
 		else if (op == "jmp") {
 			// 直接跳转

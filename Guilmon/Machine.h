@@ -84,9 +84,16 @@ namespace Guilmon {
 			alloc_.construct(ptr, Value{ value });
 			return ptr;
 		}
-		inline Value* getValue(const std::string& name) {
+		inline void createVariable(const std::string& name, Value* value) {
+			variableTable_.insert({ name, value });
+		}
+		inline Value* findVariable(const std::string& name) const {
 			return variableTable_.find(name)->second;
 		}
+		inline void setVariable(const std::string& name, Value* value) {
+			variableTable_.find(name)->second = value;
+		}
+		
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;
