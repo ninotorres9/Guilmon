@@ -480,7 +480,6 @@ TEST_F(MachineTest, TestNestedFor) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "25");
 }
 
-
 TEST_F(MachineTest, TestArray) {
 	/*
 		int array[3] = {19, 29, 13};
