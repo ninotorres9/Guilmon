@@ -40,6 +40,36 @@ namespace Guilmon {
 		~Value() { ; }
 	};
 
+
+	class LocalScope {
+	public:
+		/*
+		create
+		set
+		find
+		*/
+		inline void createVariable(const std::string& name, Value* value) {
+			variableTable_.insert({ name, value });
+		}
+		inline Value* findVariable(const std::string& name) const {
+			return variableTable_.find(name)->second;
+		}
+		inline void setVariable(const std::string& name, Value* value) {
+			variableTable_.find(name)->second = value;
+		}
+		inline void deleteVariable(const std::string& name) {
+			auto ptr = variableTable_.find(name);
+			variableTable_.erase(ptr);
+		}
+	private:
+		std::map<std::string, Value*> variableTable_;
+	};
+
+	class GlobalScope {
+	private:
+		std::vector<LocalScope> subScopes_;
+	};
+
 	class Machine {
 	public:
 		Machine(const std::vector<Instruction> &instructions) :
@@ -78,30 +108,33 @@ namespace Guilmon {
 			auto ptr = alloc_.allocate(sizeof(Value) * size);
 			return ptr;
 		}
-		template<typename T>
-		inline Value* createValue(T value) {
+		template<typename T> inline Value* createValue(T value) {
 			auto ptr = alloc_.allocate(sizeof(Value));
 			alloc_.construct(ptr, Value{ value });
 			return ptr;
 		}
 		inline void createVariable(const std::string& name, Value* value) {
-			variableTable_.insert({ name, value });
+			variableTable_.createVariable(name, value);
 		}
 		inline Value* findVariable(const std::string& name) const {
-			return variableTable_.find(name)->second;
+			return variableTable_.findVariable(name);
+			
 		}
 		inline void setVariable(const std::string& name, Value* value) {
-			variableTable_.find(name)->second = value;
+			variableTable_.setVariable(name, value);
+		}
+		inline void deleteVariable(const std::string& name) {
+			variableTable_.deleteVariable(name);
 		}
 		
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;
-		Stack<Value> operationStack_;	// ‘ÀÀ„’ª
-		Stack<size_t> addressStack_;	// µÿ÷∑’ª
+		Stack<Value> operationStack_;	
+		Stack<size_t> addressStack_;	
 
 		std::allocator<Value> alloc_;		// ƒ⁄¥Ê≥ÿ
-		std::map<std::string, Value*> variableTable_;
+		LocalScope variableTable_;
 		std::map<std::string, size_t> functionTable_;
 	};
 

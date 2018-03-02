@@ -24,7 +24,7 @@ namespace Guilmon {
 		else if (op == "push_a") {
 			// 压入数组元素
 			auto name = instruction.operands_[0].value();	// 变量名
-			auto arrayPtr = variableTable_.find(name)->second;
+			auto arrayPtr = findVariable(name);
 			auto offset = operationStack_.pop().number;
 			operationStack_.push(*(arrayPtr + offset));
 		}
@@ -93,15 +93,13 @@ namespace Guilmon {
 		else if (op == "store") {
 			auto name = instruction.operands_[0].value();	// 变量名
 			auto valuePtr = createValue(operationStack_.pop().number);
-			variableTable_.insert({ name, valuePtr });
+			variableTable_.createVariable(name, valuePtr);
 		}
 		else if (op == "free") {
-			auto variableName = instruction.operands_[0].value();	
-			auto variablePtr = variableTable_.find(variableName);	
-			// free
-			alloc_.deallocate(variablePtr->second, sizeof(Value));	 
-			// removed from variable table
-			variableTable_.erase(variablePtr);	
+			auto name = instruction.operands_[0].value();
+			auto value = variableTable_.findVariable(name);
+			alloc_.deallocate(value, sizeof(Value));
+			variableTable_.deleteVariable(name);
 		}
 		else if (op == "store_a") {
 			auto name = instruction.operands_[0].value();	// 变量名
