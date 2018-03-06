@@ -42,24 +42,24 @@ namespace Guilmon {
 	};
 
 
-	class LocalScope {
-	public:
-		inline void createVariable(const std::string& name, Value* value) {
-			variableTable_.insert({ name, value });
-		}
-		inline Value* findVariable(const std::string& name) const {
-			return variableTable_.find(name)->second;
-		}
-		inline void setVariable(const std::string& name, Value* value) {
-			variableTable_.find(name)->second = value;
-		}
-		inline void deleteVariable(const std::string& name) {
-			auto ptr = variableTable_.find(name);
-			variableTable_.erase(ptr);
-		}
-	public:
-		std::map<std::string, Value*> variableTable_;
-	};
+	//class LocalScope {
+	//public:
+	//	inline void createVariable(const std::string& name, Value* value) {
+	//		variableTable_.insert({ name, value });
+	//	}
+	//	inline Value* findVariable(const std::string& name) const {
+	//		return variableTable_.find(name)->second;
+	//	}
+	//	inline void setVariable(const std::string& name, Value* value) {
+	//		variableTable_.find(name)->second = value;
+	//	}
+	//	inline void deleteVariable(const std::string& name) {
+	//		auto ptr = variableTable_.find(name);
+	//		variableTable_.erase(ptr);
+	//	}
+	//public:
+	//	std::map<std::string, Value*> variableTable_;
+	//};
 
 	/*
 		new Scope
@@ -210,7 +210,8 @@ namespace Guilmon {
 		Stack<size_t> addressStack_;	
 
 		std::allocator<Value> alloc_;		// ÄÚ´æ³Ø
-		LocalScope variableTable_;
+		// LocalScope variableTable_;
+		Scope variableTable_;
 		std::map<std::string, size_t> functionTable_;
 	};
 

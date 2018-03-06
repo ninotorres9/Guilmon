@@ -173,6 +173,12 @@ namespace Guilmon {
 			size_t offset = addressStack_.pop();
 			index_ = offset;
 		}
+		else if (op == "newscope") {
+			variableTable_.addSubScope();
+		}
+		else if (op == "exitscope") {
+			variableTable_.exitScope();
+		}
 		else {
 			;
 		}

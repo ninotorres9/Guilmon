@@ -411,12 +411,49 @@ TEST_F(MachineTest, TestFor) {
 		jmp @LOOP
 	tag @ENDFOR
 		push %result
-		print %result
+		print
 )";
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "10");
+}
+
+TEST_F(MachineTest, TestNestedScope) {
+	/*
+	int i = 50;
+	for(int i =0; i != 10; ++i){
+		;
+	}
+	print 50;
+	*/
+	std::string text = R"(
+	tag @main
+		push 50
+		store %i
+	tag @FOR
+		newscope
+		push 0
+		store %i
+	tag @LOOP
+		push %i
+		push 10
+		neq
+		jz @ENDFOR
+		push %i
+		push 1
+		add
+		assign %i
+		jmp @LOOP
+	tag @ENDFOR
+		exitscope
+		push %i
+		print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "50");
 }
 
 TEST_F(MachineTest, TestNestedFor) {
