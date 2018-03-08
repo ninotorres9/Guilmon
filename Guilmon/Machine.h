@@ -42,25 +42,6 @@ namespace Guilmon {
 	};
 
 
-	//class LocalScope {
-	//public:
-	//	inline void createVariable(const std::string& name, Value* value) {
-	//		variableTable_.insert({ name, value });
-	//	}
-	//	inline Value* findVariable(const std::string& name) const {
-	//		return variableTable_.find(name)->second;
-	//	}
-	//	inline void setVariable(const std::string& name, Value* value) {
-	//		variableTable_.find(name)->second = value;
-	//	}
-	//	inline void deleteVariable(const std::string& name) {
-	//		auto ptr = variableTable_.find(name);
-	//		variableTable_.erase(ptr);
-	//	}
-	//public:
-	//	std::map<std::string, Value*> variableTable_;
-	//};
-
 	/*
 		new Scope
 		开一个for循环
@@ -109,6 +90,16 @@ namespace Guilmon {
 			// 删除原来的子作用域
 			currentScope_->children_.pop_back();
 		}
+		inline void setVariable(const std::string& name, Value* value, BaseScopePtr scope) {
+			auto result = scope->variableTable_.find(name);
+
+			if (result != scope->variableTable_.end()) 
+				result->second = value;
+			else if(scope->parent_ != nullptr)
+				setVariable(name, value, scope->parent_);
+			else 
+				;
+		}
 		inline Value* findVariable(const std::string& name, BaseScopePtr scope) const {
 			auto result = scope->variableTable_.find(name);
 			/*
@@ -117,8 +108,8 @@ namespace Guilmon {
 			*/
 			if (result != scope->variableTable_.end())
 				return result->second;
-			else if (currentScope_->parent_ != nullptr)
-				return findVariable(name, currentScope_->parent_);
+			else if (scope->parent_ != nullptr)
+				return findVariable(name, scope->parent_);
 			else
 				return nullptr;
 		}
@@ -139,7 +130,9 @@ namespace Guilmon {
 			return findVariable(name, currentScope_);
 		}
 		inline void setVariable(const std::string& name, Value* value) {
-			currentScope_->variableTable_.find(name)->second = value;
+			// 需要改这里
+			// currentScope_->variableTable_.find(name)->second = value;
+			setVariable(name, value, currentScope_);
 		}
 		inline void deleteVariable(const std::string& name) {
 			auto ptr = currentScope_->variableTable_.find(name);
@@ -208,9 +201,7 @@ namespace Guilmon {
 		size_t index_;
 		Stack<Value> operationStack_;	
 		Stack<size_t> addressStack_;	
-
 		std::allocator<Value> alloc_;		// 内存池
-		// LocalScope variableTable_;
 		Scope variableTable_;
 		std::map<std::string, size_t> functionTable_;
 	};

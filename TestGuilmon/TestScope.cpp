@@ -94,6 +94,16 @@ TEST_F(ScopeTest, TestFind) {
 	EXPECT_EQ(scope.findVariable("var")->number, 10);
 }
 
+TEST_F(ScopeTest, TestFind_1) {
+	Scope scope;
+	auto value = createValue(Value{ 10 });
+	scope.createVariable("var", value);
+
+	scope.addSubScope();
+	scope.addSubScope();
+	EXPECT_EQ(scope.findVariable("var")->number, 10);
+}
+
 
 
 

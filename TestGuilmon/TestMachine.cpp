@@ -425,7 +425,7 @@ TEST_F(MachineTest, TestNestedScope) {
 	for(int i =0; i != 10; ++i){
 		;
 	}
-	print 50;
+	print i;
 	*/
 	std::string text = R"(
 	tag @main
@@ -467,50 +467,53 @@ TEST_F(MachineTest, TestNestedFor) {
 		}
 		print result;
 	}
-
 	-> 25
 	*/
+
 	std::string text = R"(
-		tag @main 
-			push 0 
-			store %result 
-		tag @FOR0 
-			push 0 
-			store %i 
-		tag @LOOP0 
-			push %i 
-			push 5 
-			neq 
-			jz @ENDFOR0 
-		tag @FOR1 
-			push 0 
-			store %j 
-		tag @LOOP1 
-			push %j 
-			push 5 
-			neq 
-			jz @ENDFOR1 
-			push %result 
-			push 1 
-			add 
-			assign %result 
-			push %j 
-			push 1 
-			add 
-			assign %j 
-			jmp @LOOP1 
-		tag @ENDFOR1 
-			free %j
-			push %i 
-			push 1 
-			add 
-			assign %i 
-			jmp @LOOP0 
-		tag @ENDFOR0 
-			free %i
-			push %result 
-			print 
+	tag @main 
+		push 0 
+		store %result 
+	tag @FOR0 
+		newscope 
+		push 0 
+		store %i 
+	tag @LOOP0 
+		push %i 
+		push 5 
+		neq 
+		jz @ENDFOR0 
+	tag @FOR1 
+		newscope 
+		push 0 
+		store %j 
+	tag @LOOP1 
+		push %j 
+		push 5 
+		neq 
+		jz @ENDFOR1 
+		push %result 
+		push 1 
+		add 
+		assign %result 
+		push %j 
+		push 1 
+		add 
+		assign %j 
+		jmp @LOOP1 
+	tag @ENDFOR1 
+		exitscope 
+		push %i 
+		push 1 
+		add 
+		assign %i 
+		jmp @LOOP0 
+	tag @ENDFOR0 
+		exitscope 
+		push %result 
+		print 
 )";
+
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
 	machine.run();
