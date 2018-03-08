@@ -522,18 +522,30 @@ TEST_F(MachineTest, TestNestedFor) {
 
 TEST_F(MachineTest, TestArray) {
 	/*
-		int array[3] = {19, 29, 13};
+		int[3] array;
+		array[0] = 19;
 		print array[0]
 
 		-> 3
 	*/
+//	std::string text = R"(
+//	tag @main
+//		push 3
+//		new_array %array
+//		push 19
+//		push 0
+//		store_a %array
+//		push 0
+//		push_a %array 
+//		print
+//)";
 	std::string text = R"(
 	tag @main
 		push 3
-		new_array %array
+		store_a %array
 		push 19
 		push 0
-		store_a %array
+		assign_a %array
 		push 0
 		push_a %array 
 		print

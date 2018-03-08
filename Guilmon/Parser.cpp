@@ -36,7 +36,7 @@ namespace Guilmon {
 			|| firstToken == "jmp" || firstToken == "jz"
 			|| firstToken == "jnz" || firstToken == "assign"
 			|| firstToken == "tag" || firstToken == "call"
-			|| firstToken == "new_array" || firstToken == "store_a"
+			|| firstToken == "assign_a" || firstToken == "store_a"
 			|| firstToken == "push_a" || firstToken == "free") {
 			; // one argument : push
 			auto op = scanner_.get().value();

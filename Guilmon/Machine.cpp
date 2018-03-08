@@ -101,19 +101,32 @@ namespace Guilmon {
 			alloc_.deallocate(value, sizeof(Value));
 			variableTable_.deleteVariable(name);
 		}
-		else if (op == "store_a") {
+		else if (op == "assign_a") {
 			auto name = instruction.operands_[0].value();	// 变量名
 			auto arrayPtr = findVariable(name);
 			auto offset = operationStack_.pop().number;
 			auto value = operationStack_.pop();
 			alloc_.construct(arrayPtr + offset, value);
 		}
-		else if (op == "new_array") {
+		else if (op == "store_a") {
 			auto name = instruction.operands_[0].value();	// 变量名
 			auto size = operationStack_.pop().number;
 			auto value = createArray(size);
 			createVariable(name, value);
 		}
+		//else if (op == "store_a") {
+		//	auto name = instruction.operands_[0].value();	// 变量名
+		//	auto arrayPtr = findVariable(name);
+		//	auto offset = operationStack_.pop().number;
+		//	auto value = operationStack_.pop();
+		//	alloc_.construct(arrayPtr + offset, value);
+		//}
+		//else if (op == "new_array") {
+		//	auto name = instruction.operands_[0].value();	// 变量名
+		//	auto size = operationStack_.pop().number;
+		//	auto value = createArray(size);
+		//	createVariable(name, value);
+		//}
 		else if (op == "assign") {
 			auto name = instruction.operands_[0].value();
 			auto value = createValue(operationStack_.pop().number);
