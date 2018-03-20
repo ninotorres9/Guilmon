@@ -528,17 +528,6 @@ TEST_F(MachineTest, TestArray) {
 
 		-> 3
 	*/
-//	std::string text = R"(
-//	tag @main
-//		push 3
-//		new_array %array
-//		push 19
-//		push 0
-//		store_a %array
-//		push 0
-//		push_a %array 
-//		print
-//)";
 	std::string text = R"(
 	tag @main
 		push 3
@@ -554,6 +543,30 @@ TEST_F(MachineTest, TestArray) {
 	Machine machine(parser.getInstructions());
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "19");
+}
+
+TEST_F(MachineTest, TestClass) {
+	/*
+		class Demo{
+		public:
+			int id;
+		}
+
+		int main(){
+			Demo demo();
+			demo.id = 10;
+			print demo.id
+		}
+		-> 10
+	*/
+
+	/*
+		建立一个function table
+		加到哪里？
+		加到Scope里？
+		不对，应该做一个全局的functionTable
+		先去git一下做个备份
+	*/
 }
 
 
