@@ -91,42 +91,29 @@ namespace Guilmon {
 			operationStack_.push(Value{ (lhs == 1 || rhs == 1) ? 1 : 0 });
 		}
 		else if (op == "store") {
-			auto name = instruction.operands_[0].value();	// 变量名
+			auto name = instruction.operands_[0].value();
 			auto valuePtr = createValue(operationStack_.pop().number);
-			variableTable_.createVariable(name, valuePtr);
+			createVariable(name, valuePtr);
 		}
 		else if (op == "free") {
 			auto name = instruction.operands_[0].value();
-			auto value = variableTable_.findVariable(name);
+			auto value = findVariable(name);
 			alloc_.deallocate(value, sizeof(Value));
-			variableTable_.deleteVariable(name);
+			deleteVariable(name);
 		}
 		else if (op == "assign_a") {
-			auto name = instruction.operands_[0].value();	// 变量名
+			auto name = instruction.operands_[0].value();
 			auto arrayPtr = findVariable(name);
 			auto offset = operationStack_.pop().number;
 			auto value = operationStack_.pop();
 			alloc_.construct(arrayPtr + offset, value);
 		}
 		else if (op == "store_a") {
-			auto name = instruction.operands_[0].value();	// 变量名
+			auto name = instruction.operands_[0].value();
 			auto size = operationStack_.pop().number;
 			auto value = createArray(size);
 			createVariable(name, value);
 		}
-		//else if (op == "store_a") {
-		//	auto name = instruction.operands_[0].value();	// 变量名
-		//	auto arrayPtr = findVariable(name);
-		//	auto offset = operationStack_.pop().number;
-		//	auto value = operationStack_.pop();
-		//	alloc_.construct(arrayPtr + offset, value);
-		//}
-		//else if (op == "new_array") {
-		//	auto name = instruction.operands_[0].value();	// 变量名
-		//	auto size = operationStack_.pop().number;
-		//	auto value = createArray(size);
-		//	createVariable(name, value);
-		//}
 		else if (op == "assign") {
 			auto name = instruction.operands_[0].value();
 			auto value = createValue(operationStack_.pop().number);
@@ -185,12 +172,6 @@ namespace Guilmon {
 			// 跳回调用地址
 			size_t offset = addressStack_.pop();
 			index_ = offset;
-		}
-		else if (op == "newscope") {
-			variableTable_.addSubScope();
-		}
-		else if (op == "exitscope") {
-			variableTable_.exitScope();
 		}
 		else {
 			;

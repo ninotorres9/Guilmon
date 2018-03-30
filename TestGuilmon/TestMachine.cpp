@@ -380,36 +380,37 @@ TEST_F(MachineTest, TestWhile) {
 
 TEST_F(MachineTest, TestFor) {
 	/*
-		int result = 0;
-		for(int i = 0; i != 10; i = i + 1){
-			result = result + 1;
-		}
-		print result;
-		
-		-> 10
+	int result = 0;
+	for(int i = 0; i != 10; i = i + 1){
+	result = result + 1;
+	}
+	print result;
+
+	-> 10
 	*/
 	std::string text = R"(
 	tag @main
 		push 0
 		store %result
-	tag @FOR
+	tag @FOR1
 		push 0
-		store %i
-	tag @LOOP
-		push %i
+		store %for1_i
+	tag @LOOP1
+		push %for1_i
 		push 10
 		neq
-		jz @ENDFOR
+		jz @ENDFOR1
 		push %result
 		push 1
 		add
 		assign %result
-		push %i
+		push %for1_i
 		push 1
 		add
-		assign %i
-		jmp @LOOP
-	tag @ENDFOR
+		assign %for1_i
+		jmp @LOOP1
+	tag @ENDFOR1
+		free %for1_i
 		push %result
 		print
 )";
@@ -417,107 +418,6 @@ TEST_F(MachineTest, TestFor) {
 	Machine machine(parser.getInstructions());
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "10");
-}
-
-TEST_F(MachineTest, TestNestedScope) {
-	/*
-	int i = 50;
-	for(int i =0; i != 10; ++i){
-		;
-	}
-	print i;
-	*/
-	std::string text = R"(
-	tag @main
-		push 50
-		store %i
-	tag @FOR
-		newscope
-		push 0
-		store %i
-	tag @LOOP
-		push %i
-		push 10
-		neq
-		jz @ENDFOR
-		push %i
-		push 1
-		add
-		assign %i
-		jmp @LOOP
-	tag @ENDFOR
-		exitscope
-		push %i
-		print
-)";
-	Parser parser(text);
-	Machine machine(parser.getInstructions());
-	machine.run();
-	EXPECT_EQ(removeSpaces(stream_.str()), "50");
-}
-
-TEST_F(MachineTest, TestNestedFor) {
-	/*
-	int main(){
-		int result = 0;
-		for(int i = 0; i != 5; i++){
-			for(int j = 0; j != 5; j++){
-				result++;
-			}
-		}
-		print result;
-	}
-	-> 25
-	*/
-
-	std::string text = R"(
-	tag @main 
-		push 0 
-		store %result 
-	tag @FOR0 
-		newscope 
-		push 0 
-		store %i 
-	tag @LOOP0 
-		push %i 
-		push 5 
-		neq 
-		jz @ENDFOR0 
-	tag @FOR1 
-		newscope 
-		push 0 
-		store %j 
-	tag @LOOP1 
-		push %j 
-		push 5 
-		neq 
-		jz @ENDFOR1 
-		push %result 
-		push 1 
-		add 
-		assign %result 
-		push %j 
-		push 1 
-		add 
-		assign %j 
-		jmp @LOOP1 
-	tag @ENDFOR1 
-		exitscope 
-		push %i 
-		push 1 
-		add 
-		assign %i 
-		jmp @LOOP0 
-	tag @ENDFOR0 
-		exitscope 
-		push %result 
-		print 
-)";
-
-	Parser parser(text);
-	Machine machine(parser.getInstructions());
-	machine.run();
-	EXPECT_EQ(removeSpaces(stream_.str()), "25");
 }
 
 TEST_F(MachineTest, TestArray) {
