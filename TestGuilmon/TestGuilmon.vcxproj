@@ -39,6 +39,7 @@
     <ClCompile Include="..\Guilmon\Machine.cpp" />
     <ClCompile Include="..\Guilmon\Parser.cpp" />
     <ClCompile Include="TestMachine.cpp" />
+    <ClCompile Include="TestOptimizer.cpp" />
     <ClCompile Include="TestParser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

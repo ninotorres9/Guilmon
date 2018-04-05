@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Machine.h" />
+    <ClInclude Include="Optimizer.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scope.h" />
     <ClInclude Include="stdafx.h" />
