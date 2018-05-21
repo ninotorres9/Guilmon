@@ -40,5 +40,5 @@ TEST(OptimizerTest, TestConstantFolding) {
 		EXPECT_EQ(result[i].op_, expected[i].op_) << "different operator at index: " << i;
 		EXPECT_EQ(result[i].operands_[0].toString(), expected[i].operands_[0].toString()) << "different operands at index: " << i;
 	}
-
+	
 }
