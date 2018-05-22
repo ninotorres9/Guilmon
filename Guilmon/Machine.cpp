@@ -6,27 +6,36 @@ namespace Guilmon {
 		auto instruction = instructions_[index_++];
 		auto op = instruction.op_;
 		if (op == "push") {
-			// value几种情况: 1. 变量 2.char 3.数字
+			// 变量
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
-				auto valuePtr = findVariable(instruction.operands_[0].value());
-				operationStack_.push(Value{ *valuePtr });
+				auto name = instruction.operands_[0].value();
+				if (isArray_ != true) {
+					// 普通变量
+					auto variablePtr = findVariable(name);
+					operationStack_.push(Value{ *variablePtr });
+				}
+				else {
+					// 数组
+					auto arrayPtr = findVariable(name);
+					auto offset = operationStack_.pop().number;
+					operationStack_.push(*(arrayPtr + offset));
+				}
+
 			}
+			// 字符
 			else if (instruction.operands_[0].type() == TokenType::CHAR) {
-				// 此处string转char，为了方便初始化union(蛋疼。。。）
 				auto value = instruction.operands_[0].value()[0];
 				operationStack_.push(Value{ value });
 			}
+			// 符号
+			else if (instruction.operands_[0].type() == TokenType::REFER) {
+				isArray_ = true;
+			}
+			// 数字
 			else {
 				auto value = std::stoi(instruction.operands_[0].value());
 				operationStack_.push(Value{ value });
 			}
-		}
-		else if (op == "push_a") {
-			// 压入数组元素
-			auto name = instruction.operands_[0].value();	// 变量名
-			auto arrayPtr = findVariable(name);
-			auto offset = operationStack_.pop().number;
-			operationStack_.push(*(arrayPtr + offset));
 		}
 		else if (op == "add") {
 			int rhs = operationStack_.pop().number;
@@ -54,7 +63,6 @@ namespace Guilmon {
 			operationStack_.push(Value{ lhs > rhs ? 1 : 0 });
 		}
 		else if (op == "goe") {
-			// greater than or equal
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
 			operationStack_.push(Value{ lhs >= rhs ? 1 : 0 });
@@ -65,7 +73,6 @@ namespace Guilmon {
 			operationStack_.push(Value{ lhs < rhs ? 1 : 0 });
 		}
 		else if (op == "loe") {
-			// less than or equal
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
 			operationStack_.push(Value{ lhs <= rhs ? 1 : 0 });
@@ -101,23 +108,18 @@ namespace Guilmon {
 			alloc_.deallocate(value, sizeof(Value));
 			deleteVariable(name);
 		}
-		else if (op == "assign_a") {
-			auto name = instruction.operands_[0].value();
-			auto arrayPtr = findVariable(name);
-			auto offset = operationStack_.pop().number;
-			auto value = operationStack_.pop();
-			alloc_.construct(arrayPtr + offset, value);
-		}
-		else if (op == "store_a") {
-			auto name = instruction.operands_[0].value();
-			auto size = operationStack_.pop().number;
-			auto value = createArray(size);
-			createVariable(name, value);
-		}
 		else if (op == "assign") {
-			auto name = instruction.operands_[0].value();
-			auto value = createValue(operationStack_.pop().number);
-			setVariable(name, value);
+			if (isArray_ == true) {
+				auto name = instruction.operands_[0].value();
+				auto size = operationStack_.pop().number;
+				auto arrayPtr = createArray(size);
+				setArray(name, arrayPtr, size);
+			}
+			else {
+				auto name = instruction.operands_[0].value();
+				auto variablePtr = createValue(operationStack_.pop().number);
+				setVariable(name, variablePtr);
+			 }
 		}
 		else if (op == "jmp") {
 			// 直接跳转

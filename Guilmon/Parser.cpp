@@ -24,6 +24,9 @@ namespace Guilmon {
 			token = Token(TokenType::CHAR, { std::string(1, getChar()) });
 			getChar();	// eat '
 		}
+		else if (firstChar == '&') {
+			token = Token(TokenType::REFER, std::string(1, getChar()));
+		}
 		else {
 			token = getKeywordToken();
 		}

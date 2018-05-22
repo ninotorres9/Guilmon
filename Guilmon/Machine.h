@@ -45,7 +45,7 @@ namespace Guilmon {
 	class Machine {
 	public:
 		Machine(const std::vector<Instruction> &instructions) :
-			instructions_(instructions) , index_(0){
+			instructions_(instructions) , index_(0), isArray_(false){
 			;
 		}
 		inline void run() {
@@ -92,7 +92,24 @@ namespace Guilmon {
 			return variableTable_.find(name)->second;
 		}
 		inline void setVariable(const std::string& name, Value* value) {
-			variableTable_.find(name)->second = value;
+			if (variableTable_.find(name) != variableTable_.end()) {
+				variableTable_.find(name)->second = value;
+			}
+			else {
+				createVariable(name, value);
+			}
+		}
+		inline void setArray(const std::string& name, Value* arrayPtr, size_t size) {
+			if (variableTable_.find(name) != variableTable_.end()) {
+				;
+			}
+			else {
+				createVariable(name, arrayPtr);
+				for (size_t offset = 0; offset != size; ++offset) {
+					auto value = operationStack_.pop();
+					alloc_.construct(arrayPtr + offset, value);
+				}
+			}
 		}
 		inline void deleteVariable(const std::string& name) {
 			variableTable_.erase(name);
@@ -104,9 +121,9 @@ namespace Guilmon {
 		Stack<Value> operationStack_;	
 		Stack<size_t> addressStack_;	
 		std::allocator<Value> alloc_;		// ÄÚ´æ³Ø
-		// Scope variableTable_;
 		std::map<std::string, Value*> variableTable_;
 		std::map<std::string, size_t> functionTable_;
+		bool isArray_;
 	};
 
 }
