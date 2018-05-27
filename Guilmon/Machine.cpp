@@ -97,11 +97,6 @@ namespace Guilmon {
 			int lhs = operationStack_.pop().number;
 			operationStack_.push(Value{ (lhs == 1 || rhs == 1) ? 1 : 0 });
 		}
-		else if (op == "store") {
-			auto name = instruction.operands_[0].value();
-			auto valuePtr = createValue(operationStack_.pop().number);
-			createVariable(name, valuePtr);
-		}
 		else if (op == "free") {
 			auto name = instruction.operands_[0].value();
 			auto value = findVariable(name);

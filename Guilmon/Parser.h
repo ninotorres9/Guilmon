@@ -110,6 +110,15 @@ namespace Guilmon {
 
 	private:
 		Instruction expression();
+		inline Instruction getOneArgumentInstruction() {
+			auto op = scanner_.get().value();
+			auto arg = scanner_.get();
+			return Instruction(op, { arg });
+		}
+		inline Instruction getNoArgumentInstruction() {
+			auto op = scanner_.get().value();
+			return Instruction(op, {});
+		}
 	private:
 		Scanner scanner_;
 	};
