@@ -19,6 +19,7 @@ namespace Guilmon {
 					auto arrayPtr = findVariable(name);
 					auto offset = operationStack_.pop().number;
 					operationStack_.push(*(arrayPtr + offset));
+					isArray_ = false;
 				}
 
 			}
@@ -109,6 +110,7 @@ namespace Guilmon {
 				auto size = operationStack_.pop().number;
 				auto arrayPtr = createArray(size);
 				setArray(name, arrayPtr, size);
+				isArray_ = false;
 			}
 			else {
 				auto name = instruction.operands_[0].value();

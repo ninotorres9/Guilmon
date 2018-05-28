@@ -415,6 +415,45 @@ TEST_F(MachineTest, TestArray) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "2");
 }
 
+TEST_F(MachineTest, TestArray_1) {
+	std::string text = R"(
+		tag @main
+		  push 6
+		  push 5
+		  push 4
+		  push 3
+		  push 2
+		  push 1
+		  push 6
+		  push &
+		  assign %container
+		tag @FOR_INITIALIZATION_0
+		  push 0
+		  assign %i
+		tag @FOR_CONDITION_0
+		  push %i
+		  push 6
+		  neq
+		  jz @END_FOR_0
+		tag @FOR_BODY_0
+		  push %i
+		  push &
+		  push %container
+		  print
+		tag @FOR_INCREMENT_0
+		  push %i
+		  push 1
+		  add
+		  assign %i
+		  jmp @FOR_CONDITION_0
+		tag @END_FOR_0
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "123456");
+}
+
 TEST_F(MachineTest, TestCallFunciton) {
 	/*
 	def add(int lhs, int rhs){
