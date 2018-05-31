@@ -9,27 +9,24 @@ namespace Guilmon {
 			// 变量
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
 				auto name = instruction.operands_[0].value();
-				if (isIndex_ != true) {
-					// 普通变量
-					auto variablePtr = findVariable(name);
-					operationStack_.push(Value{ *variablePtr });
-				}
-				else {
+
+				if (state_ == State::INDEX) {
 					// 数组
 					auto arrayPtr = findVariable(name);
 					auto offset = operationStack_.pop().number;
 					operationStack_.push(*(arrayPtr + offset));
-					isIndex_ = false;
+					state_ = State::VALUE;
+				}
+				else {
+					// 普通变量
+					auto variablePtr = findVariable(name);
+					operationStack_.push(Value{ *variablePtr });
 				}
 			}
 			// 字符
 			else if (instruction.operands_[0].type() == TokenType::CHAR) {
 				auto value = instruction.operands_[0].value()[0];
 				operationStack_.push(Value{ value });
-			}
-			// 符号
-			else if (instruction.operands_[0].type() == TokenType::REFER) {
-				isArray_ = true;
 			}
 			// 数字
 			else {
@@ -104,28 +101,28 @@ namespace Guilmon {
 			deleteVariable(name);
 		}
 		else if (op == "index") {
-			isIndex_ = true;
+			state_ = State::INDEX;
 		}
 		else if (op == "array") {
-			isArray_ = true;
+			state_ = State::ARRAY;
 		}
 		else if (op == "assign") {
 
 			auto name = instruction.operands_[0].value();
-
-			if (isArray_ == true) {
+			if(state_ == State::ARRAY){
 				// 创建数组
 				auto size = operationStack_.pop().number;
 				auto valuePtr = createArray(size);
 				setArray(name, valuePtr, size);
-				isArray_ = false;
+				state_ = State::VALUE;
 			}
-			else if (isIndex_ == true) {
+			else if (state_ == State::INDEX){ // isIndex_ == true) {
 				// 更改数组
 				auto offset = operationStack_.pop().number;	// index
 				auto valuePtr = createValue(operationStack_.pop().number);
 				*(findVariable(name) + offset) = *valuePtr;
-				isIndex_ = false;
+				// isIndex_ = false;
+				state_ == State::VALUE;
 			}
 			else {
 				// 普通变量
