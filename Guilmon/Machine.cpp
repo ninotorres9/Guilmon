@@ -9,7 +9,7 @@ namespace Guilmon {
 			// 变量
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
 				auto name = instruction.operands_[0].value();
-				if (isArray_ != true) {
+				if (isIndex_ != true) {
 					// 普通变量
 					auto variablePtr = findVariable(name);
 					operationStack_.push(Value{ *variablePtr });
@@ -21,7 +21,6 @@ namespace Guilmon {
 					operationStack_.push(*(arrayPtr + offset));
 					isArray_ = false;
 				}
-
 			}
 			// 字符
 			else if (instruction.operands_[0].type() == TokenType::CHAR) {
@@ -107,31 +106,31 @@ namespace Guilmon {
 		else if (op == "index") {
 			isIndex_ = true;
 		}
+		else if (op == "array") {
+			isArray_ = true;
+		}
 		else if (op == "assign") {
+
+			auto name = instruction.operands_[0].value();
+
 			if (isArray_ == true) {
-				auto name = instruction.operands_[0].value();
+				// 创建数组
 				auto size = operationStack_.pop().number;
-				auto arrayPtr = createArray(size);
-				setArray(name, arrayPtr, size);
+				auto valuePtr = createArray(size);
+				setArray(name, valuePtr, size);
 				isArray_ = false;
 			}
 			else if (isIndex_ == true) {
-				// 数组
-
-				auto name = instruction.operands_[0].value();
-				auto offset = operationStack_.pop().number;
+				// 更改数组
+				auto offset = operationStack_.pop().number;	// index
 				auto valuePtr = createValue(operationStack_.pop().number);
-
-				auto variablePtr = findVariable(name);
-				variablePtr += offset;
-				*variablePtr = *valuePtr;
-
+				*(findVariable(name) + offset) = *valuePtr;
 				isIndex_ = false;
 			}
 			else {
-				auto name = instruction.operands_[0].value();
-				auto variablePtr = createValue(operationStack_.pop().number);
-				setVariable(name, variablePtr);
+				// 普通变量
+				auto valuePtr = createValue(operationStack_.pop().number);
+				setVariable(name, valuePtr);
 			 }
 		}
 		else if (op == "jmp") {

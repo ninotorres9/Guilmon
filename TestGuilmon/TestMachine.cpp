@@ -391,10 +391,10 @@ TEST_F(MachineTest, TestArray) {
 		push 2
 		push 5
 		push 3
-		push &
+		array
 		assign %array
 		push 1
-		push &
+		index
 		push %array
 		print
 
@@ -465,21 +465,25 @@ TEST_F(MachineTest, TestArray_2) {
 			push 2
 			push 1
 			push 3
-			push &
+			array
 			assign %container
-			push 5
+			push 9
 			push 0
 			index
 			assign %container
 			push 0
-			push &
+			index
 			push %container
-		    print
+			print
+			push 2
+			index
+			push %container
+			print
 )";
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
 	machine.run();
-	EXPECT_EQ(removeSpaces(stream_.str()), "5");
+	EXPECT_EQ(removeSpaces(stream_.str()), "93");
 
 }
 
