@@ -45,7 +45,7 @@ namespace Guilmon {
 	class Machine {
 	public:
 		Machine(const std::vector<Instruction> &instructions) :
-			instructions_(instructions) , index_(0), isArray_(false){
+			instructions_(instructions) , index_(0), isArray_(false), isIndex_(false){
 			;
 		}
 		inline void run() {
@@ -124,6 +124,7 @@ namespace Guilmon {
 		std::map<std::string, Value*> variableTable_;
 		std::map<std::string, size_t> functionTable_;
 		bool isArray_;
+		bool isIndex_;
 	};
 
 }

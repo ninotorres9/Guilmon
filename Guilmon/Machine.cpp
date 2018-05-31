@@ -104,6 +104,9 @@ namespace Guilmon {
 			alloc_.deallocate(value, sizeof(Value));
 			deleteVariable(name);
 		}
+		else if (op == "index") {
+			isIndex_ = true;
+		}
 		else if (op == "assign") {
 			if (isArray_ == true) {
 				auto name = instruction.operands_[0].value();
@@ -111,6 +114,19 @@ namespace Guilmon {
 				auto arrayPtr = createArray(size);
 				setArray(name, arrayPtr, size);
 				isArray_ = false;
+			}
+			else if (isIndex_ == true) {
+				// สýื้
+
+				auto name = instruction.operands_[0].value();
+				auto offset = operationStack_.pop().number;
+				auto valuePtr = createValue(operationStack_.pop().number);
+
+				auto variablePtr = findVariable(name);
+				variablePtr += offset;
+				*variablePtr = *valuePtr;
+
+				isIndex_ = false;
 			}
 			else {
 				auto name = instruction.operands_[0].value();

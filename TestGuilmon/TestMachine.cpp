@@ -380,10 +380,6 @@ TEST_F(MachineTest, TestFor) {
 
 TEST_F(MachineTest, TestArray) {
 	/*
-		int[3] array;
-		array[0] = 19;
-		print array[0]
-		
 		array = [5, 2, 3];
 		print array[1];
 
@@ -452,6 +448,39 @@ TEST_F(MachineTest, TestArray_1) {
 	Machine machine(parser.getInstructions());
 	machine.run();
 	EXPECT_EQ(removeSpaces(stream_.str()), "123456");
+}
+
+TEST_F(MachineTest, TestArray_2) {
+	/*
+		def main(){
+			container = [1, 2, 3];
+			print container[0];
+			container[0] = 5;
+			print container[0];
+		}
+	*/
+	std::string text = R"(
+		tag @main
+			push 3
+			push 2
+			push 1
+			push 3
+			push &
+			assign %container
+			push 5
+			push 0
+			index
+			assign %container
+			push 0
+			push &
+			push %container
+		    print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "5");
+
 }
 
 TEST_F(MachineTest, TestCallFunciton) {
