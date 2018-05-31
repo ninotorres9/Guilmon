@@ -116,6 +116,13 @@ namespace Guilmon {
 		}
 		
 	private:
+		enum class State {
+			VALUE,
+			ARRAY,
+			INDEX,
+		};
+
+	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;
 		Stack<Value> operationStack_;	
@@ -125,6 +132,7 @@ namespace Guilmon {
 		std::map<std::string, size_t> functionTable_;
 		bool isArray_;
 		bool isIndex_;
+		State state_;
 	};
 
 }

@@ -421,7 +421,7 @@ TEST_F(MachineTest, TestArray_1) {
 		  push 2
 		  push 1
 		  push 6
-		  push &
+		  array
 		  assign %container
 		tag @FOR_INITIALIZATION_0
 		  push 0
@@ -433,7 +433,7 @@ TEST_F(MachineTest, TestArray_1) {
 		  jz @END_FOR_0
 		tag @FOR_BODY_0
 		  push %i
-		  push &
+		  index
 		  push %container
 		  print
 		tag @FOR_INCREMENT_0

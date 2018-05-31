@@ -19,7 +19,7 @@ namespace Guilmon {
 					auto arrayPtr = findVariable(name);
 					auto offset = operationStack_.pop().number;
 					operationStack_.push(*(arrayPtr + offset));
-					isArray_ = false;
+					isIndex_ = false;
 				}
 			}
 			// ×Ö·û
