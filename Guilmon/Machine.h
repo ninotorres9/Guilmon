@@ -45,7 +45,7 @@ namespace Guilmon {
 	class Machine {
 	public:
 		Machine(const std::vector<Instruction> &instructions) :
-			instructions_(instructions) , index_(0), state_(State::VALUE){
+			instructions_(instructions), index_(0), state_(State::VALUE) {
 			;
 		}
 		inline void run() {
@@ -54,7 +54,7 @@ namespace Guilmon {
 			size_t index = 0;
 			for (auto inst : instructions_) {
 				if (inst.op_ == "tag")
-					functionTable_.insert({ inst.operands_[0].value(), index});
+					functionTable_.insert({ inst.operands_[0].value(), index });
 				index++;
 			}
 
@@ -114,7 +114,7 @@ namespace Guilmon {
 		inline void deleteVariable(const std::string& name) {
 			variableTable_.erase(name);
 		}
-		
+
 	private:
 		enum class State {
 			VALUE,
@@ -122,6 +122,10 @@ namespace Guilmon {
 			INDEX,
 		};
 
+	private:
+		inline void setState(State state) {
+			state_ = state;
+		}
 	private:
 		std::vector<Instruction> instructions_;
 		size_t index_;

@@ -15,7 +15,7 @@ namespace Guilmon {
 					auto arrayPtr = findVariable(name);
 					auto offset = operationStack_.pop().number;
 					operationStack_.push(*(arrayPtr + offset));
-					state_ = State::VALUE;
+					setState(State::VALUE);
 				}
 				else {
 					// 普通变量
@@ -101,10 +101,10 @@ namespace Guilmon {
 			deleteVariable(name);
 		}
 		else if (op == "index") {
-			state_ = State::INDEX;
+			setState(State::INDEX);
 		}
 		else if (op == "array") {
-			state_ = State::ARRAY;
+			setState(State::ARRAY);
 		}
 		else if (op == "assign") {
 
@@ -114,7 +114,7 @@ namespace Guilmon {
 				auto size = operationStack_.pop().number;
 				auto valuePtr = createArray(size);
 				setArray(name, valuePtr, size);
-				state_ = State::VALUE;
+				setState(State::VALUE);
 			}
 			else if (state_ == State::INDEX){ // isIndex_ == true) {
 				// 更改数组
@@ -122,7 +122,7 @@ namespace Guilmon {
 				auto valuePtr = createValue(operationStack_.pop().number);
 				*(findVariable(name) + offset) = *valuePtr;
 				// isIndex_ = false;
-				state_ = State::VALUE;
+				setState(State::VALUE);
 			}
 			else {
 				// 普通变量
