@@ -122,7 +122,7 @@ namespace Guilmon {
 				auto valuePtr = createValue(operationStack_.pop().number);
 				*(findVariable(name) + offset) = *valuePtr;
 				// isIndex_ = false;
-				state_ == State::VALUE;
+				state_ = State::VALUE;
 			}
 			else {
 				// ∆’Õ®±‰¡ø
