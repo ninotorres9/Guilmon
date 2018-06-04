@@ -582,28 +582,59 @@ TEST_F(MachineTest, TestArray_4) {
 
 TEST_F(MachineTest, TestCallFunciton) {
 	/*
-	def add(int lhs, int rhs){
-	return lhs + rhs;
+	def func(){
+		return 5;
 	}
+
 	def main(){
-	print add(5, 6);
+		print func();
 	}
 	*/
 	std::string text = R"(
-	tag @add
-		add
+	tag @func
+		push 59
 		ret
 	tag @main
-		push 5
-		push 6
-		call @add
+		call @func
 		print
 	)";
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
 	machine.run();
-	EXPECT_EQ(removeSpaces(stream_.str()), "11");
+	EXPECT_EQ(removeSpaces(stream_.str()), "59");
 }
+
+TEST_F(MachineTest, TestCallFunciton_1) {
+	/*
+		def add(lhs, rhs){
+			return lhs + rhs;
+		}
+
+		def main(){
+			print add(1, 2);
+		}
+	*/
+
+	std::string text = R"(
+		tag @add
+			assign %lhs
+			assign %rhs
+			push %lhs
+			push %rhs
+			add
+			ret
+		tag @main
+			push 2
+			push 1
+			call @add
+			print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "3");
+}
+
 
 TEST_F(MachineTest, TestClass) {
 	/*
