@@ -10,17 +10,22 @@ namespace Guilmon {
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
 				auto name = instruction.operands_[0].value();
 
-				if (state_ == State::INDEX) {
-					// 数组
-					auto arrayPtr = findVariable(name);
-					auto offset = operationStack_.pop().number;
-					operationStack_.push(*(arrayPtr + offset));
-					setState(State::VALUE);
+				if (!hasVariable(name)) {
+					std::cout << "name '"<< name << "' is not defined" << std::endl;
 				}
 				else {
-					// 普通变量
 					auto variablePtr = findVariable(name);
-					operationStack_.push(Value{ *variablePtr });
+
+					if (state_ == State::INDEX) {
+						// 数组
+						auto offset = operationStack_.pop().number;
+						operationStack_.push(*(variablePtr + offset));
+						setState(State::VALUE);
+					}
+					else {
+						// 普通变量
+						operationStack_.push(Value{ *variablePtr });
+					}
 				}
 			}
 			// 字符
@@ -166,12 +171,16 @@ namespace Guilmon {
 			}
 		}
 		else if (op == "print") {
-			auto value = operationStack_.pop();
-			std::cout << value.number << std::endl;
+			if (!operationStack_.isEmpty()) {
+				auto value = operationStack_.pop();
+				std::cout << value.number << std::endl;
+			}
 		}
 		else if (op == "print_s") {
-			auto value = operationStack_.pop();
-			std::cout << value.word << std::endl;
+			if (!operationStack_.isEmpty()) {
+				auto value = operationStack_.pop();
+				std::cout << value.word << std::endl;
+			}
 		}
 		else if (op == "call") {
 			// 存入当前地址并跳转

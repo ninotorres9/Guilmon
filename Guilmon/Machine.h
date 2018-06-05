@@ -21,6 +21,9 @@ namespace Guilmon {
 			container_.pop_back();
 			return result;
 		}
+		inline bool isEmpty() const{
+			return container_.size() == 0;
+		}
 	private:
 		std::vector<T> container_;
 	};
@@ -90,6 +93,9 @@ namespace Guilmon {
 		}
 		inline Value* findVariable(const std::string& name) const {
 			return variableTable_.find(name)->second;
+		}
+		inline bool hasVariable(const std::string& name) const {
+			return variableTable_.find(name) != variableTable_.end();
 		}
 		inline void setVariable(const std::string& name, Value* value) {
 			if (variableTable_.find(name) != variableTable_.end()) {

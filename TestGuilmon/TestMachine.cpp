@@ -635,6 +635,30 @@ TEST_F(MachineTest, TestCallFunciton_1) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "3");
 }
 
+TEST_F(MachineTest, TestNotDefinedVar) {
+	/*
+		def main(){
+			value = 123;
+			print value;
+			print abc;
+		}
+	*/
+	std::string text = R"(
+		tag @main
+			push 123
+			assign %value
+			push %value
+			print
+			push %akb
+			print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "123name'akb'isnotdefined");
+}
+
+
 
 TEST_F(MachineTest, TestClass) {
 	/*
