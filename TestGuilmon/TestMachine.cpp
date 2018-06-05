@@ -658,8 +658,6 @@ TEST_F(MachineTest, TestNotDefinedVar) {
 	EXPECT_EQ(removeSpaces(stream_.str()), "123name'akb'isnotdefined");
 }
 
-
-
 TEST_F(MachineTest, TestClass) {
 	/*
 		class Demo{
