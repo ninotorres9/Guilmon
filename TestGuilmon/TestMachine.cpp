@@ -655,7 +655,7 @@ TEST_F(MachineTest, TestNotDefinedVar) {
 	Parser parser(text);
 	Machine machine(parser.getInstructions());
 	machine.run();
-	EXPECT_EQ(removeSpaces(stream_.str()), "123name'akb'isnotdefined");
+	EXPECT_EQ(removeSpaces(stream_.str()), "123NameError:name'akb'isnotdefined");
 }
 
 TEST_F(MachineTest, TestClass) {

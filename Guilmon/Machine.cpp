@@ -11,7 +11,7 @@ namespace Guilmon {
 				auto name = instruction.operands_[0].value();
 
 				if (!hasVariable(name)) {
-					std::cout << "name '"<< name << "' is not defined" << std::endl;
+					std::cout << "NameError: " << "name '"<< name << "' is not defined" << std::endl;
 				}
 				else {
 					auto variablePtr = findVariable(name);
