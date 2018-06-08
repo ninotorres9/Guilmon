@@ -661,11 +661,10 @@ TEST_F(MachineTest, TestNotDefinedVar) {
 TEST_F(MachineTest, TestClass) {
 	/*
 		class Demo{
-		public:
 			int id;
 		}
 
-		int main(){
+		def main(){
 			Demo demo();
 			demo.id = 10;
 			print demo.id
@@ -674,12 +673,14 @@ TEST_F(MachineTest, TestClass) {
 	*/
 
 	/*
-		建立一个function table
-		加到哪里？
-		加到Scope里？
-		不对，应该做一个全局的functionTable
-		先去git一下做个备份
+		建立一个class池
+		再建立一个class type
+		内存class的方法（索引）和成员
+
+
 	*/
+
+
 }
 
 
