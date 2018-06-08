@@ -39,9 +39,12 @@ namespace Guilmon {
 			|| firstToken == "jmp" || firstToken == "jz"
 			|| firstToken == "jnz" || firstToken == "assign"
 			|| firstToken == "tag" || firstToken == "call"
-			|| firstToken == "free") {
+			|| firstToken == "free" || firstToken == "class") {
 			; 
 			return getOneArgumentInstruction();
+		}
+		else if (firstToken == "create_class") {
+			return getTwoArgumentInstruction();
 		}
 		else {
 			return getNoArgumentInstruction();

@@ -112,8 +112,11 @@ namespace Guilmon {
 			setState(State::ARRAY);
 		}
 		else if (op == "assign") {
+			std::string name = instruction.operands_[0].value();
+			if (state_ == State::CLASS) {
+				name = currentClass_ + "." + name;
+			}
 
-			auto name = instruction.operands_[0].value();
 			if(state_ == State::ARRAY){
 				// 创建数组
 				auto size = operationStack_.pop().number;
@@ -189,6 +192,22 @@ namespace Guilmon {
 			index_ = offset;
 		}
 		else if (op == "ret") {
+			// 跳回调用地址
+			size_t offset = addressStack_.pop();
+			index_ = offset;
+		}
+		else if (op == "create_class") {
+			auto classType = instruction.operands_[0].value();
+			auto className = instruction.operands_[1].value();
+
+			setState(State::CLASS);
+			// 存入当前地址并跳转
+			addressStack_.push(index_);
+			index_ = functionTable_.find(classType)->second;
+			currentClass_ = className;		
+		}
+		else if (op == "end_class") {
+			setState(State::VALUE);
 			// 跳回调用地址
 			size_t offset = addressStack_.pop();
 			index_ = offset;

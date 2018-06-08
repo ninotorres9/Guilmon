@@ -80,7 +80,7 @@ namespace Guilmon {
 		}
 		inline std::string getIdentifier() {
 			std::string value;
-			while (isalpha(peekChar()) || peekChar() == '_' || isdigit(peekChar()))
+			while (isalpha(peekChar()) || peekChar() == '_' || isdigit(peekChar()) || peekChar() == '.')
 				value.push_back(getChar());
 			return value;
 		}
@@ -114,6 +114,12 @@ namespace Guilmon {
 			auto op = scanner_.get().value();
 			auto arg = scanner_.get();
 			return Instruction(op, { arg });
+		}
+		inline Instruction getTwoArgumentInstruction() {
+			auto op = scanner_.get().value();
+			auto arg1 = scanner_.get();
+			auto arg2 = scanner_.get();
+			return Instruction(op, { arg1, arg2 });
 		}
 		inline Instruction getNoArgumentInstruction() {
 			auto op = scanner_.get().value();

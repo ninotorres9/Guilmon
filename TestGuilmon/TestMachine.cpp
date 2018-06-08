@@ -661,26 +661,37 @@ TEST_F(MachineTest, TestNotDefinedVar) {
 TEST_F(MachineTest, TestClass) {
 	/*
 		class Demo{
-			int id;
+			id = 15;
 		}
 
 		def main(){
 			Demo demo();
+			print demo.id;
 			demo.id = 10;
-			print demo.id
+			print demo.id;
 		}
 		-> 10
 	*/
 
-	/*
-		建立一个class池
-		再建立一个class type
-		内存class的方法（索引）和成员
+	std::string text = R"(
+		tag @Demo
+			push 15
+			assign %id
+			end_class
 
-
-	*/
-
-
+		tag @main
+			create_class Demo demo
+			push %demo.id
+			print
+			push 10
+			assign %demo.id
+			push %demo.id
+			print
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "1510");
 }
 
 

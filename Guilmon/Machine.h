@@ -44,6 +44,16 @@ namespace Guilmon {
 		~Value() { ; }
 	};
 
+	
+	class ClassType{
+	public:
+		std::map<std::string, Value*> variableTable_;
+		std::map<std::string, size_t> functionTable_;
+	};
+
+	//state_ == class;
+	//std::map<std::string>, ClassType*> classTable_;
+
 
 	class Machine {
 	public:
@@ -105,6 +115,14 @@ namespace Guilmon {
 				createVariable(name, value);
 			}
 		}
+		//inline void setClassVariable(const std::string& name, Value* value) {
+		//	if (currentClass_.variableTable_.find(name) != currentClass_.variableTable_.end()){
+		//		currentClass_.variableTable_.find(name)->second = value;
+		//	}
+		//	else {
+		//		currentClass_.variableTable_.insert({ name, value });
+		//	}
+		//}
 		inline void setArray(const std::string& name, Value* arrayPtr, size_t size) {
 			if (variableTable_.find(name) != variableTable_.end()) {
 				;
@@ -126,6 +144,7 @@ namespace Guilmon {
 			VALUE,
 			ARRAY,
 			INDEX,
+			CLASS,
 		};
 
 	private:
@@ -140,8 +159,13 @@ namespace Guilmon {
 		std::allocator<Value> alloc_;		// ÄÚ´æ³Ø
 		std::map<std::string, Value*> variableTable_;
 		std::map<std::string, size_t> functionTable_;
+		std::map<std::string, ClassType*> classTable_;
+		std::string currentClass_;
 		State state_;
 	};
+
+
+
 
 }
 

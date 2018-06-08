@@ -61,3 +61,34 @@ TEST(ParserTest, Tag) {
 	EXPECT_EQ(instructions[0].operands_[0].type(), TokenType::TAG);
 	EXPECT_EQ(instructions[0].operands_[0].value(), "function0");
 }
+
+TEST(ParserTest, Class) {
+	Parser parser(R"(
+		create_class Demo demo
+		assign %Demo.demo
+		push %Demo.demo
+		class %Demo
+)");
+	auto instructions = parser.getInstructions();
+	EXPECT_EQ(instructions[0].op_, "create_class");
+	EXPECT_EQ(instructions[0].operands_[0].type(), TokenType::KEYWORD);
+	EXPECT_EQ(instructions[0].operands_[0].value(), "Demo");
+	EXPECT_EQ(instructions[0].operands_[1].type(), TokenType::KEYWORD);
+	EXPECT_EQ(instructions[0].operands_[1].value(), "demo");
+
+	EXPECT_EQ(instructions[1].operands_[0].type(), TokenType::VARIABLE);
+	EXPECT_EQ(instructions[1].operands_[0].value(), "Demo.demo");
+	EXPECT_EQ(instructions[2].operands_[0].type(), TokenType::VARIABLE);
+	EXPECT_EQ(instructions[2].operands_[0].value(), "Demo.demo");
+
+	EXPECT_EQ(instructions[3].op_, "class");
+	EXPECT_EQ(instructions[3].operands_[0].type(), TokenType::VARIABLE);
+
+
+
+
+
+
+
+
+}
