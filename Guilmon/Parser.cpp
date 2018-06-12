@@ -39,7 +39,8 @@ namespace Guilmon {
 			|| firstToken == "jmp" || firstToken == "jz"
 			|| firstToken == "jnz" || firstToken == "assign"
 			|| firstToken == "tag" || firstToken == "call"
-			|| firstToken == "free" || firstToken == "class") {
+			|| firstToken == "free" || firstToken == "class"
+			|| firstToken == "bind") {
 			; 
 			return getOneArgumentInstruction();
 		}

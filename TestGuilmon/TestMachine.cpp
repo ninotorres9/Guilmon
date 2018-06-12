@@ -695,5 +695,43 @@ TEST_F(MachineTest, TestClass) {
 }
 
 
+TEST_F(MachineTest, TestClass_1) {
+	/*
+		class Person{
+			id = 15;
+			def showID(){
+			print id;
+			}
+		}
+
+		def main(){
+			Demo demo;
+			demo.showID();
+		}
+	*/
+
+	std::string text = R"(
+		tag @Person
+			push 15
+			assign %id
+			bind @Person.showID
+			end_class
+		tag @Person.showID
+			push %id
+			print
+			ret
+		tag @main
+			create_class Person person
+			call @person.showID
+			
+)";
+	Parser parser(text);
+	Machine machine(parser.getInstructions());
+	machine.run();
+	EXPECT_EQ(removeSpaces(stream_.str()), "15");
+}
+
+
+
 
 

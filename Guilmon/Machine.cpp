@@ -10,6 +10,10 @@ namespace Guilmon {
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
 				auto name = instruction.operands_[0].value();
 
+				if (state_ == State::CLASS) {
+					name = currentClass_ + "." + name;
+				}
+
 				if (!hasVariable(name)) {
 					std::cout << "NameError: " << "name '"<< name << "' is not defined" << std::endl;
 				}
@@ -186,6 +190,11 @@ namespace Guilmon {
 			}
 		}
 		else if (op == "call") {
+
+			if (instruction.operands_[0].value().find(".") != std::string::npos) {
+				setState(State::CLASS);
+			}
+
 			// 存入当前地址并跳转
 			addressStack_.push(index_);
 			size_t offset = functionTable_.find(instruction.operands_[0].value())->second;
@@ -195,6 +204,8 @@ namespace Guilmon {
 			// 跳回调用地址
 			size_t offset = addressStack_.pop();
 			index_ = offset;
+			// 将状态重置
+			setState(State::VALUE);	
 		}
 		else if (op == "create_class") {
 			auto classType = instruction.operands_[0].value();
@@ -211,6 +222,21 @@ namespace Guilmon {
 			// 跳回调用地址
 			size_t offset = addressStack_.pop();
 			index_ = offset;
+		}
+		else if (op == "bind") {
+			// 将函数与类实例绑定
+			auto functionName = instruction.operands_[0].value();
+			size_t index = functionTable_.find(functionName)->second;
+
+
+			// functionName.find()
+			//  functionName.find(".")
+			std::string newName = currentClass_;
+			for (size_t i = functionName.find("."); i != functionName.size(); ++i) {
+				newName.push_back(functionName[i]);
+			}
+			
+			functionTable_.insert({newName, index });
 		}
 		else {
 			;

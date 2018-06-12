@@ -115,14 +115,6 @@ namespace Guilmon {
 				createVariable(name, value);
 			}
 		}
-		//inline void setClassVariable(const std::string& name, Value* value) {
-		//	if (currentClass_.variableTable_.find(name) != currentClass_.variableTable_.end()){
-		//		currentClass_.variableTable_.find(name)->second = value;
-		//	}
-		//	else {
-		//		currentClass_.variableTable_.insert({ name, value });
-		//	}
-		//}
 		inline void setArray(const std::string& name, Value* arrayPtr, size_t size) {
 			if (variableTable_.find(name) != variableTable_.end()) {
 				;

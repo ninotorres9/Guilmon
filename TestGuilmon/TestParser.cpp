@@ -62,6 +62,22 @@ TEST(ParserTest, Tag) {
 	EXPECT_EQ(instructions[0].operands_[0].value(), "function0");
 }
 
+TEST(ParserTest, Demo) {
+	Parser parser(R"(
+		tag @Person
+			push 0
+			assign %id
+			end_class
+		tag @main
+			create_class Person person
+			push %person.id
+			print
+)");
+	auto instructions = parser.getInstructions();
+	int i = 0;
+	
+}
+
 TEST(ParserTest, Class) {
 	Parser parser(R"(
 		create_class Demo demo
@@ -83,12 +99,5 @@ TEST(ParserTest, Class) {
 
 	EXPECT_EQ(instructions[3].op_, "class");
 	EXPECT_EQ(instructions[3].operands_[0].type(), TokenType::VARIABLE);
-
-
-
-
-
-
-
 
 }
