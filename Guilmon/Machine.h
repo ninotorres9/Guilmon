@@ -130,6 +130,21 @@ namespace Guilmon {
 		inline void deleteVariable(const std::string& name) {
 			variableTable_.erase(name);
 		}
+		inline void bindClass(std::string& name) {
+			name = currentClass_ + "." + name;
+		}
+	private:
+		void handlePushVariable(const Instruction &instruction);
+		inline void pushVariable(Value* value) {
+			operationStack_.push(*value);
+		}
+		inline void pushArray(Value* value) {
+			auto offset = operationStack_.pop().number;
+			operationStack_.push(*(value + offset));
+			setState(State::VALUE);
+		}
+
+		
 
 	private:
 		enum class State {

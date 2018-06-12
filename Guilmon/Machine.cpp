@@ -6,102 +6,80 @@ namespace Guilmon {
 		auto instruction = instructions_[index_++];
 		auto op = instruction.op_;
 		if (op == "push") {
-			// 变量
 			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
-				auto name = instruction.operands_[0].value();
-
-				if (state_ == State::CLASS) {
-					name = currentClass_ + "." + name;
-				}
-
-				if (!hasVariable(name)) {
-					std::cout << "NameError: " << "name '"<< name << "' is not defined" << std::endl;
-				}
-				else {
-					auto variablePtr = findVariable(name);
-
-					if (state_ == State::INDEX) {
-						// 数组
-						auto offset = operationStack_.pop().number;
-						operationStack_.push(*(variablePtr + offset));
-						setState(State::VALUE);
-					}
-					else {
-						// 普通变量
-						operationStack_.push(Value{ *variablePtr });
-					}
-				}
+				handlePushVariable(instruction);
 			}
-			// 字符
 			else if (instruction.operands_[0].type() == TokenType::CHAR) {
-				auto value = instruction.operands_[0].value()[0];
-				operationStack_.push(Value{ value });
+				auto value = new Value{ instruction.operands_[0].value()[0] };
+				pushVariable(value);
 			}
-			// 数字
+			else if (instruction.operands_[0].type() == TokenType::NUMBER) {
+				auto value = new Value{ std::stoi(instruction.operands_[0].value()) };
+				pushVariable(value);
+			}
 			else {
-				auto value = std::stoi(instruction.operands_[0].value());
-				operationStack_.push(Value{ value });
+				;	// error
 			}
 		}
 		else if (op == "add") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs + rhs });
+			pushVariable(new Value{ lhs + rhs });
 		}
 		else if (op == "sub") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs - rhs });
+			pushVariable(new Value{ lhs - rhs });
 		}
 		else if (op == "mul") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs * rhs });
+			pushVariable(new Value{ lhs * rhs });
 		}
 		else if (op == "div") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs / rhs });
+			pushVariable(new Value{ lhs / rhs });
 		}
 		else if (op == "gtn") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs > rhs ? 1 : 0 });
+			pushVariable(new Value{ lhs > rhs ? 1 : 0 });
 		}
 		else if (op == "goe") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs >= rhs ? 1 : 0 });
+			pushVariable(new Value{ lhs >= rhs ? 1 : 0 });
 		}
 		else if (op == "ltn") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs < rhs ? 1 : 0 });
+			pushVariable(new Value{ lhs < rhs ? 1 : 0 });
 		}
 		else if (op == "loe") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs <= rhs ? 1 : 0 });
+			pushVariable(new Value{ lhs <= rhs ? 1 : 0 });
 		}
 		else if (op == "eq") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs == rhs ? 1 : 0 });
+			pushVariable(new Value{ lhs == rhs ? 1 : 0 });
 		}
 		else if (op == "neq") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ lhs != rhs ? 1 : 0 });
+			pushVariable(new Value{ lhs != rhs ? 1 : 0 });
 		}
 		else if (op == "and") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ (lhs == rhs == 1) ? 1 : 0 });
+			pushVariable(new Value{ (lhs == rhs == 1) ? 1 : 0 });
 		}
 		else if (op == "or") {
 			int rhs = operationStack_.pop().number;
 			int lhs = operationStack_.pop().number;
-			operationStack_.push(Value{ (lhs == 1 || rhs == 1) ? 1 : 0 });
+			pushVariable(new Value{ (lhs == 1 || rhs == 1) ? 1 : 0 });
 		}
 		else if (op == "free") {
 			auto name = instruction.operands_[0].value();
@@ -240,6 +218,25 @@ namespace Guilmon {
 		}
 		else {
 			;
+		}
+	}
+
+	void Machine::handlePushVariable(const Instruction &instruction) {
+		auto name = instruction.operands_[0].value();
+		if (state_ == State::CLASS) {
+			bindClass(name);
+		}
+		if (!hasVariable(name)) {
+			std::cout << "NameError: " << "name '" << name << "' is not defined" << std::endl;
+		}
+		else {
+			auto value = findVariable(name);
+			if (state_ == State::INDEX) {
+				pushArray(value);
+			}
+			else {
+				pushVariable(value);
+			}
 		}
 	}
 }
