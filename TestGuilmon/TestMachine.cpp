@@ -714,9 +714,9 @@ TEST_F(MachineTest, TestClass_1) {
 		tag @Person
 			push 15
 			assign %id
-			bind @Person.showID
+			bind @showID
 			end_class
-		tag @Person.showID
+		tag @showID
 			push %id
 			print
 			ret

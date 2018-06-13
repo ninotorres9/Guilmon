@@ -205,16 +205,10 @@ namespace Guilmon {
 			// 将函数与类实例绑定
 			auto functionName = instruction.operands_[0].value();
 			size_t index = functionTable_.find(functionName)->second;
-
-
-			// functionName.find()
-			//  functionName.find(".")
-			std::string newName = currentClass_;
-			for (size_t i = functionName.find("."); i != functionName.size(); ++i) {
-				newName.push_back(functionName[i]);
-			}
 			
-			functionTable_.insert({newName, index });
+			// 绑定类名
+			functionName = currentClass_ + "." + functionName;
+			functionTable_.insert({functionName, index });
 		}
 		else {
 			;
