@@ -133,8 +133,16 @@ namespace Guilmon {
 		inline void bindClass(std::string& name) {
 			name = currentClass_ + "." + name;
 		}
+		inline std::string bindCurrentClass(const std::string& name) {
+			return currentClass_ + "." + name;
+		}
 	private:
-		void handlePushVariable(const Instruction &instruction);
+		void handlePushInstruction(const Instruction &instruction);
+		void handlePushVariableInstruction(const Instruction &instruction);
+		void handleAssignInstruction(const Instruction &instruction);
+		void handleAssignArrayInstruction(const Instruction &instruction);
+		void handleAssignArrayElementInstruction(const Instruction &instruction);
+		void handleAssignVariableInstruction(const Instruction &instruction);
 		inline void pushVariable(Value* value) {
 			operationStack_.push(*value);
 		}

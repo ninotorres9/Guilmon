@@ -6,20 +6,7 @@ namespace Guilmon {
 		auto instruction = instructions_[index_++];
 		auto op = instruction.op_;
 		if (op == "push") {
-			if (instruction.operands_[0].type() == TokenType::VARIABLE) {
-				handlePushVariable(instruction);
-			}
-			else if (instruction.operands_[0].type() == TokenType::CHAR) {
-				auto value = new Value{ instruction.operands_[0].value()[0] };
-				pushVariable(value);
-			}
-			else if (instruction.operands_[0].type() == TokenType::NUMBER) {
-				auto value = new Value{ std::stoi(instruction.operands_[0].value()) };
-				pushVariable(value);
-			}
-			else {
-				;	// error
-			}
+			handlePushInstruction(instruction);
 		}
 		else if (op == "add") {
 			int rhs = operationStack_.pop().number;
@@ -94,31 +81,7 @@ namespace Guilmon {
 			setState(State::ARRAY);
 		}
 		else if (op == "assign") {
-			std::string name = instruction.operands_[0].value();
-			if (state_ == State::CLASS) {
-				name = currentClass_ + "." + name;
-			}
-
-			if(state_ == State::ARRAY){
-				// 创建数组
-				auto size = operationStack_.pop().number;
-				auto valuePtr = createArray(size);
-				setArray(name, valuePtr, size);
-				setState(State::VALUE);
-			}
-			else if (state_ == State::INDEX){ // isIndex_ == true) {
-				// 更改数组
-				auto offset = operationStack_.pop().number;	// index
-				auto valuePtr = createValue(operationStack_.pop().number);
-				*(findVariable(name) + offset) = *valuePtr;
-				// isIndex_ = false;
-				setState(State::VALUE);
-			}
-			else {
-				// 普通变量
-				auto valuePtr = createValue(operationStack_.pop().number);
-				setVariable(name, valuePtr);
-			 }
+			handleAssignInstruction(instruction);
 		}
 		else if (op == "jmp") {
 			// 直接跳转
@@ -215,7 +178,24 @@ namespace Guilmon {
 		}
 	}
 
-	void Machine::handlePushVariable(const Instruction &instruction) {
+	void Machine::handlePushInstruction(const Instruction &instruction) {
+		if (instruction.operands_[0].type() == TokenType::VARIABLE) {
+			handlePushVariableInstruction(instruction);
+		}
+		else if (instruction.operands_[0].type() == TokenType::CHAR) {
+			auto value = new Value{ instruction.operands_[0].value()[0] };
+			pushVariable(value);
+		}
+		else if (instruction.operands_[0].type() == TokenType::NUMBER) {
+			auto value = new Value{ std::stoi(instruction.operands_[0].value()) };
+			pushVariable(value);
+		}
+		else {
+			;	// error
+		}
+	}
+
+	void Machine::handlePushVariableInstruction(const Instruction &instruction) {
 		auto name = instruction.operands_[0].value();
 		if (state_ == State::CLASS) {
 			bindClass(name);
@@ -233,4 +213,51 @@ namespace Guilmon {
 			}
 		}
 	}
+
+	void Machine::handleAssignInstruction(const Instruction &instruction) {
+		if (state_ == State::ARRAY) {
+			handleAssignArrayInstruction(instruction);
+		}
+		else if (state_ == State::INDEX) {
+			handleAssignArrayElementInstruction(instruction);
+		}
+		else {
+			handleAssignVariableInstruction(instruction);
+		}
+	}
+
+	void Machine::handleAssignArrayInstruction(const Instruction &instruction) {
+		// 创建/替换数组
+		std::string name = instruction.operands_[0].value();
+		if (state_ == State::CLASS) {
+			name = bindCurrentClass(name);
+		}
+
+		auto size = operationStack_.pop().number;
+		auto valuePtr = createArray(size);
+		setArray(name, valuePtr, size);
+		setState(State::VALUE);
+	}
+
+	void Machine::handleAssignArrayElementInstruction(const Instruction &instruction) {
+		// 修改数组元素值
+		std::string name = instruction.operands_[0].value();
+		auto index = operationStack_.pop().number;
+		auto valuePtr = createValue(operationStack_.pop().number);
+		*(findVariable(name) + index) = *valuePtr;
+		setState(State::VALUE);
+	}
+
+	void Machine::handleAssignVariableInstruction(const Instruction &instruction) {
+		// 创建/替换变量
+		std::string name = instruction.operands_[0].value();
+		if (state_ == State::CLASS) {
+			name = bindCurrentClass(name);
+		}
+
+		auto valuePtr = createValue(operationStack_.pop().number);
+		setVariable(name, valuePtr);
+	}
+
+
 }
